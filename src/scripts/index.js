@@ -2,7 +2,7 @@ import '../styles/index.scss';
 
 import './CanvasCM-graphs';
 import $c from 'canvas-chaining-method';
-import createTree from './createTree'
+import createTree from './createTree';
 
 const depth = 8;
 

@@ -27,7 +27,7 @@ CanvasCM.prototype.drawTree = function (dot, depth, x, y) {
     if (dot.right) {
         this.translate(x, 0)
             .drawTree(dot.right, depth - 1, x / 2, y_lr)
-            .translate(-x, 0)
+            .translate(-x, 0);
     }
 
     if (dot.left) {
