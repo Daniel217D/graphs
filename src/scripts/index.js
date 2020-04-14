@@ -15,8 +15,11 @@ $gcanvas.on('click', () => {
         if (!cursor.clicked.status) {
             cursor.click("dot", dot);
         } else if (cursor.statusIs("dot")) {
-            dots.addPath(cursor.getObj(), dot);
-            cursor.click(false);
+            const dot = dots.getByCoordinates(cursor.x, cursor.y, 0);
+            if (dot) {
+                dots.addPath(cursor.getObj(), dot);
+                cursor.click(false);
+            }
         }
     } else {
         const newDot = dots.add(cursor.x, cursor.y);
@@ -29,7 +32,6 @@ $gcanvas.on('click', () => {
 });
 
 // $gcanvas.on('dblclick', () => dots.removeByCoordinates(cursor.x, cursor.y));
-
 
 function Render() {
     requestAnimationFrame(Render);
