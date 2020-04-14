@@ -15,32 +15,15 @@ export default class Dot {
         this.color = color;
     }
 
-    show = ($canvas) => {
+    show = ($gcanvas) => {
         this.paths.forEach(({id, x, y}) => {
             if (id >= this.id) {
-                $canvas.beginPath()
-                    .line(this.x, this.y, x, y)
-                    .closePath()
-                    .stroke();
+                $gcanvas.gLine(this.x, this.y, x, y);
             }
         });
 
-        $canvas
-            .save()
-            .beginPath()
-            .set({
-                "fillStyle": "white",
-                "strokeStyle": this.color,
-                "font": "30px Arial",
-                "textAlign": "center"
-            })
-            .circle(this.x, this.y, this.r)
-            .stroke()
-            .fill()
-            .set("fillStyle", this.color)
-            .fillText(this.id, this.x, this.y + this.r / 4)
-            .closePath()
-            .restore();
+        $gcanvas.gDot(this.x, this.y, this.r, this.color, this.id);
+
     };
 }
 

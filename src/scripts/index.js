@@ -3,49 +3,39 @@ import '../styles/index.scss';
 import Cursor from './Cursor';
 import Dots from './Dots';
 
-import $c from 'canvas-chaining-method';
+import $cg from './CanvasCMGraphs';
 
-const $canvas = $c(document.getElementById('canvas')).setSize();
-const cursor = new Cursor($canvas.get('canvas'));
-const dots = new Dots($canvas);
-const line = {
-    status: false,
-    from: {}
-};
+const $gcanvas = $cg(document.getElementById('canvas')).setSize();
+const cursor = new Cursor($gcanvas.get('canvas'));
+const dots = new Dots($gcanvas);
 
-$canvas.on('click', () => {
+$gcanvas.on('click', () => {
     const dot = dots.getByCoordinates(cursor.x, cursor.y);
-
     if (dot) {
-        if (!line.status) {
-            line.status = true;
-            line.from = dot;
-        } else {
-            line.status = false;
-            dots.addPath(line.from, dot);
+        if (!cursor.clicked.status) {
+            cursor.click("dot", dot);
+        } else if (cursor.statusIs("dot")) {
+            dots.addPath(cursor.getObj(), dot);
+            cursor.click(false);
         }
     } else {
         const newDot = dots.add(cursor.x, cursor.y);
 
-        if(line.status) {
-            line.status = false;
-            dots.addPath(line.from, newDot);
+        if (cursor.statusIs("dot")) {
+            dots.addPath(cursor.getObj(), newDot);
+            cursor.click(false);
         }
     }
 });
 
-// $canvas.on('dblclick', () => dots.removeByCoordinates(cursor.x, cursor.y));
+// $gcanvas.on('dblclick', () => dots.removeByCoordinates(cursor.x, cursor.y));
 
 
 function Render() {
     requestAnimationFrame(Render);
-    $canvas.clear();
-
-    if(line.status) {
-        $canvas.beginPath()
-            .line(line.from.x, line.from.y, cursor.x, cursor.y)
-            .closePath()
-            .stroke();
+    $gcanvas.clear();
+    if (cursor.statusIs("dot")) {
+        $gcanvas.gLine(cursor.getObj().x, cursor.getObj().y, cursor.x, cursor.y)
     }
 
     dots.show();

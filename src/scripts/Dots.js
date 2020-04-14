@@ -2,8 +2,8 @@ import {distance} from "./helpers";
 import Dot, {defaults} from './Dot';
 
 export default class Dots {
-    constructor($canvas) {
-        this.$canvas = $canvas;
+    constructor($gcanvas) {
+        this.$gcanvas = $gcanvas;
     }
 
     dots = [];
@@ -65,6 +65,6 @@ export default class Dots {
     };
 
     show = () => {
-        this.dots.forEach(dot => dot.show(this.$canvas));
+        this.dots.forEach(dot => dot.show(this.$gcanvas));
     };
 }
