@@ -1,92 +1,54 @@
 import '../styles/index.scss';
 
-import $c from '../../../canvas-chaining-method/dist/index';
+import Cursor from './Cursor';
+import Dots from './Dots';
 
-const $canvas = $c(document.getElementById('canvas'));
+import $c from 'canvas-chaining-method';
 
-let dots = [];
-let lines = [];
-let status = {
-  name: "",
-  options: {
-
-  }
-};
-const draw = () => {
-    $canvas.setSize();
-    dots.forEach((dot) => {
-        printDot($canvas, ...dot);
-    });
-
-    lines.forEach((line) => {
-        $canvas.beginPath()
-            .line(...line)
-            .closePath()
-            .stroke();
-    });
+const $canvas = $c(document.getElementById('canvas')).setSize();
+const cursor = new Cursor($canvas.get('canvas'));
+const dots = new Dots($canvas);
+const line = {
+    status: false,
+    from: {}
 };
 
-draw();
-window.addEventListener('resize', function () {
-    draw();
-});
+$canvas.on('click', () => {
+    const dot = dots.getByCoordinates(cursor.x, cursor.y);
 
-
-$canvas.on('click', function (e) {
-    const [x, y] = [e.clientX, e.clientY];
-
-    if (dots.length === 0 || dots.every(([dot_x, dot_y]) => distance(x, y, dot_x, dot_y) >= 60)) {
-        dots.push([x, y]);
-    } else if (dots.length !== 0) {
-        if(status.name === "") {
-            let active_dot = false;
-            dots.some(([dot_x, dot_y]) => {
-                if(distance(x, y, dot_x, dot_y) <= 20) {
-                    active_dot = [dot_x, dot_y];
-                    return true
-                }
-                return false
-            })
-
-            if(active_dot) {
-                status = {
-                    name: 'drawLine',
-                    options: {
-                        from: active_dot
-                    }
-                }
-            }
+    if (dot) {
+        if (!line.status) {
+            line.status = true;
+            line.from = dot;
         } else {
-            lines.push([x, y, ...status.options.from]);
-            status = {
-                name: ""
-            }
+            line.status = false;
+            dots.addPath(line.from, dot);
+        }
+    } else {
+        const newDot = dots.add(cursor.x, cursor.y);
+
+        if(line.status) {
+            line.status = false;
+            dots.addPath(line.from, newDot);
         }
     }
+});
 
-    draw();
-}).on('mousemove', function (e) {
-    draw();
-    const [x, y] = [e.clientX, e.clientY];
+// $canvas.on('dblclick', () => dots.removeByCoordinates(cursor.x, cursor.y));
 
-    if(status.name === "drawLine") {
-        this.beginPath()
-            .line(...status.options.from, x, y)
+
+function Render() {
+    requestAnimationFrame(Render);
+    $canvas.clear();
+
+    if(line.status) {
+        $canvas.beginPath()
+            .line(line.from.x, line.from.y, cursor.x, cursor.y)
             .closePath()
             .stroke();
     }
-});
 
-
-function printDot($canvas, x, y) {
-    $canvas.beginPath()
-        .circle(x, y, 30)
-        .closePath()
-        .stroke()
-        .beginPath()
-        .circle(x, y, 20)
-        .closePath()
-        .fill();
+    dots.show();
 }
 
-const distance = (x1, y1, x2, y2) => Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2);
+Render();
