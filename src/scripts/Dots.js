@@ -18,15 +18,6 @@ export default class Dots {
 
     getLastId = () => this.dots[this.dots.length - 1]?.id || 0;
 
-    addWithCheck = (x, y, r = defaults.r, ...vars) => {
-        if (this.dots.every(dot => distance(x, y, dot.x, dot.y) > dot.r + r)) {
-            const dot = new Dot(this.getLastId() + 1, x, y, r, ...vars);
-            this.dots.push(dot);
-            return dot;
-        }
-        return false;
-    };
-
     add = (...vars) => {
         const dot = new Dot(this.getLastId() + 1, ...vars);
         this.dots.push(dot);
