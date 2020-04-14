@@ -42,12 +42,12 @@ export default class Dots {
             d2 = this.getById(d2);
         }
 
-        if (d1.id === d2.id) {
+        if (d1.id === d2.id || !d1.paths.every(dot => dot.id !== d2.id)) {
             return;
         }
 
-        d1.paths.push(d2);
-        d2.paths.push(d1);
+        d1.addPath(d2);
+        d2.addPath(d1);
     };
 
     removeByCoordinates = (x, y) => {
