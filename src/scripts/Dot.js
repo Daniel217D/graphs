@@ -25,6 +25,8 @@ export default class Dot {
         $gcanvas.gDot(this.x, this.y, this.r, this.color, this.id);
 
     };
+
+    addPath = (dot) => this.paths.push(dot)
 }
 
 export {defaults};
