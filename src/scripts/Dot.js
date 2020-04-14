@@ -27,6 +27,11 @@ export default class Dot {
     };
 
     addPath = (dot) => this.paths.push(dot)
+
+    setPos = (x, y) =>  {
+        this.x = x;
+        this.y = y;
+    }
 }
 
 export {defaults};
