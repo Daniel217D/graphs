@@ -2,10 +2,12 @@ export default class Cursor {
     constructor(el) {
         this.x = 0;
         this.y = 0;
-        this.clicked = {
+
+        this.mouseDown = this.drag = this.click ={
             status: false,
             obj: {}
         };
+
         const rect = el.getBoundingClientRect();
 
         el.addEventListener('mousemove', (e) => {
@@ -14,9 +16,9 @@ export default class Cursor {
         });
     }
 
-    click = (status, obj = {}) => this.clicked = {status, obj};
+    set = (event, status, obj = {}) => this[event] = {status, obj};
 
-    statusIs = (status, context = "clicked") => status === this[context]?.status;
+    statusIs = (event, status) => status === this[event]?.status;
 
-    getObj = (context = "clicked") => this[context] !== undefined ? this[context].obj : undefined;
+    getObj = (event) => this[event] !== undefined ? this[event].obj : undefined;
 }
