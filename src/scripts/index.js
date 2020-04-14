@@ -12,7 +12,7 @@ const dots = new Dots($gcanvas);
 $gcanvas.on('mousedown', () => {
     const dot = dots.getByCoordinates(cursor.x, cursor.y, 0);
     if (dot) {
-        cursor.set("mousedown", "dot", dot)
+        cursor.set("mousedown", "dot", dot);
     }
 }).on('mousemove', () => {
     if (cursor.statusIs("mousedown", "dot")) {
@@ -22,7 +22,7 @@ $gcanvas.on('mousedown', () => {
         dot.setPos(cursor.x, cursor.y);
     }
 
-    if(cursor.statusIs("drag", "dot")) {
+    if (cursor.statusIs("drag", "dot")) {
         cursor.getObj("drag").setPos(cursor.x, cursor.y);
     }
 }).on('click', () => {
@@ -53,6 +53,11 @@ $gcanvas.on('mousedown', () => {
             dots.addPath(cursor.getObj("click"), newDot);
             cursor.set("click", false);
         }
+    }
+}).on('contextmenu', (e) => {
+    if(cursor.statusIs("click", "dot")) {
+        cursor.set("click", false);
+        e.preventDefault();
     }
 });
 
