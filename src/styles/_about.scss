@@ -1,0 +1,26 @@
+$main: rgba(57, 223, 127, 0.8);
+
+.about {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	padding: 0px 20px 20px 20px;
+	background-color: $main;
+	border-radius: 5px;
+	pointer-events: none;
+	&-title {
+		font-size: 16px;
+	}
+
+	&-list {
+		font-size: 14px;
+	}
+
+	&-item {
+		padding-bottom: 5px;
+		
+		&_additional {
+			padding-left: 10px;
+		}
+	}
+}
