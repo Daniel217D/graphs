@@ -15,11 +15,10 @@ $gcanvas.on('mousedown', () => {
         cursor.set("mousedown", "dot", dot);
     }
 }).on('mousemove', () => {
-    if (cursor.statusIs("mousedown", "dot")) {
+    if (cursor.statusIs("mousedown", "dot") && !cursor.statusIs("click", "dot")) {
         const dot = cursor.getObj("mousedown");
         cursor.set("mousedown", false);
         cursor.set("drag", "dot", dot);
-        dot.setPos(cursor.x, cursor.y);
     }
 
     if (cursor.statusIs("drag", "dot")) {
