@@ -33,7 +33,10 @@ $gcanvas.on('mousedown', () => {
     }
 
     if (cursor.statusIs("drag", "dot")) {
-        cursor.getObj("drag").setPos(cursor.x, cursor.y);
+        const dot = dots.getByCoordinates(cursor.x, cursor.y);
+        if(!dot || dot.id === cursor.getObj("drag").id) {
+            cursor.getObj("drag").setPos(cursor.x, cursor.y);
+        }
     }
 }).on('click', () => {
     if (cursor.statusIs("drag", "dot")) {
@@ -46,11 +49,12 @@ $gcanvas.on('mousedown', () => {
     }
 
     const dot = dots.getByCoordinates(cursor.x, cursor.y);
+
     if (dot) {
-        if (!cursor.statusIs('click', 'dot')) {
+        const dot_r0 = dots.getByCoordinates(cursor.x, cursor.y, 0);
+        if (dot_r0 && !cursor.statusIs('click', 'dot')) {
             cursor.set("click", "dot", dot);
         } else if (cursor.statusIs("click", "dot")) {
-            const dot = dots.getByCoordinates(cursor.x, cursor.y, 0);
             if (dot) {
                 dots.addPath(cursor.getObj("click"), dot);
                 cursor.set("click", false);
@@ -67,8 +71,8 @@ $gcanvas.on('mousedown', () => {
 }).on('contextmenu', (e) => {
     if(cursor.statusIs("click", "dot")) {
         cursor.set("click", false);
-        e.preventDefault();
     }
+    e.preventDefault();
 });
 
 // $gcanvas.on('dblclick', () => dots.removeByCoordinates(cursor.x, cursor.y));
