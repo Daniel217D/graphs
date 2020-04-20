@@ -73,3 +73,7 @@ function Render() {
 }
 
 Render();
+window.addEventListener('resize', function () {
+    $gcanvas.setSize();
+    Render();
+});
