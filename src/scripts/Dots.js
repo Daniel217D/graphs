@@ -55,7 +55,24 @@ export default class Dots {
         this.dots.splice(this.getById(id), 1);
     };
 
-    show = () => {
-        this.dots.forEach(dot => dot.show(this.$gcanvas));
+    print = () => {
+        this.dots.forEach(dot => dot.printPaths(this.$gcanvas));
+        this.dots.forEach(dot => dot.printDot(this.$gcanvas));
     };
+
+    maximal_independent_set = () => {
+        const conjunctions = [];
+        const disjunctions = [];
+
+        this.dots.forEach(dot => dot.paths.forEach(path => conjunctions.push([dot.id, path.id])));
+
+        conjunctions.forEach(pair => {
+            let index = conjunctions.findIndex(next_pair => next_pair[0] === pair[1] && next_pair[1] === pair[0]);
+            if(index >= 0) {
+                conjunctions.splice(index, 1);
+            }
+        });
+        console.log(conjunctions);
+        // conjunctions.forEach(left => conjunctions.forEach(right) => )
+    }
 }

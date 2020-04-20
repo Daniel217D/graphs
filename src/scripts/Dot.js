@@ -15,15 +15,16 @@ export default class Dot {
         this.color = color;
     }
 
-    show = ($gcanvas) => {
-        this.paths.forEach(({id, x, y}) => {
-            if (id >= this.id) {
-                $gcanvas.gLine(this.x, this.y, x, y);
-            }
-        });
-
+    printDot = ($gcanvas) => {
         $gcanvas.gDot(this.x, this.y, this.r, this.color, this.id);
+    };
 
+    printPaths = ($gcanvas) => {
+        this.paths.forEach(({id, x, y}) => {
+            // if (id >= this.id) {
+            $gcanvas.gArrow(this.x, this.y, x, y, this.r);
+            // }
+        });
     };
 
     addPath = (dot) => this.paths.push(dot)
