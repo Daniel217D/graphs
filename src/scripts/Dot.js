@@ -21,9 +21,7 @@ export default class Dot {
 
     printPaths = ($gcanvas) => {
         this.paths.forEach(({id, x, y}) => {
-            // if (id >= this.id) {
             $gcanvas.gArrow(this.x, this.y, x, y, this.r);
-            // }
         });
     };
 

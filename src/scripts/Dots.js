@@ -38,7 +38,6 @@ export default class Dots {
         }
 
         d1.addPath(d2);
-        // d2.addPath(d1);
     };
 
     removeByCoordinates = (x, y) => {

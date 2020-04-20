@@ -1,20 +1,23 @@
 import {CanvasCM} from 'canvas-chaining-method';
+import {defaults} from './Dot';
 import {direction, angle, angleToDirection} from './helpers';
 
 class CanvasCMGraphs extends CanvasCM {
-    gArrow = (sx, sy, ex, ey, r) => {
+    gArrow = (sx, sy, ex, ey, r = defaults.r) => {
+        const SIZE = 20;
+
         const dir = direction(sx, sy, ex, ey);
         const sxArrow = ex - dir.x * r;
         const syArrow = ey - dir.y * r;
-        const exArrow = ex - dir.x * 2 * r;
-        const eyArrow = ey - dir.y * 2 * r;
+        const exArrow = ex - dir.x * 2 * SIZE;
+        const eyArrow = ey - dir.y * 2 * SIZE;
 
         const arrow1 = angleToDirection(angle(sxArrow, syArrow, exArrow, eyArrow) - ( 30 * Math.PI / 180));
         const arrow2 = angleToDirection(angle(sxArrow, syArrow, exArrow, eyArrow) + ( 30 * Math.PI / 180));
 
         return this.gLine(sx, sy, ex, ey)
-            .gLine(sxArrow, syArrow, sxArrow + arrow1.x * r /2 , syArrow + arrow1.y * r / 2)
-            .gLine(sxArrow, syArrow, sxArrow + arrow2.x * r / 2, syArrow + arrow2.y * r / 2);
+            .gLine(sxArrow, syArrow, sxArrow + arrow1.x * SIZE , syArrow + arrow1.y * SIZE)
+            .gLine(sxArrow, syArrow, sxArrow + arrow2.x * SIZE, syArrow + arrow2.y * SIZE);
     };
 
     gLine = (sx, sy, ex, ey) => {
@@ -24,7 +27,7 @@ class CanvasCMGraphs extends CanvasCM {
             .stroke();
     };
 
-    gDot = (x, y, r, color, text) => {
+    gDot = (x, y, r = defaults.r, color = defaults.color, text = "") => {
         return this.save()
             .beginPath()
             .set({

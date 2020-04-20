@@ -71,18 +71,16 @@ $gcanvas.on('mousedown', () => {
     }
 });
 
-window.test1 = dots.maximal_independent_set;
-window.test1();
 // $gcanvas.on('dblclick', () => dots.removeByCoordinates(cursor.x, cursor.y));
 
 function Render() {
     requestAnimationFrame(Render);
     $gcanvas.clear();
-    if (cursor.statusIs("click", "dot")) {
-        $gcanvas.gLine(cursor.getObj("click").x, cursor.getObj("click").y, cursor.x, cursor.y);
-    }
-
     dots.print();
+
+    if (cursor.statusIs("click", "dot")) {
+        $gcanvas.gArrow(cursor.getObj("click").x, cursor.getObj("click").y, cursor.x, cursor.y, 0);
+    }
 }
 
 Render();
