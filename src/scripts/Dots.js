@@ -26,11 +26,11 @@ export default class Dots {
 
     addPath = (d1, d2) => {
         if (Number.isInteger(d1)) {
-            d1 = this.getById(d1);
+            d1 = this.dots[this.getById(d1)];
         }
 
         if (Number.isInteger(d2)) {
-            d2 = this.getById(d2);
+            d2 = this.dots[this.getById(d2)];
         }
 
         if (d1.id === d2.id || !d1.paths.every(dot => dot.id !== d2.id)) {
@@ -38,7 +38,7 @@ export default class Dots {
         }
 
         d1.addPath(d2);
-        d2.addPath(d1);
+        // d2.addPath(d1);
     };
 
     removeByCoordinates = (x, y) => {
