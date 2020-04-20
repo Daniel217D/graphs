@@ -4,10 +4,21 @@ import Cursor from './Cursor';
 import Dots from './Dots';
 
 import $cg from './CanvasCMGraphs';
+import {direction} from './helpers';
 
 const $gcanvas = $cg(document.getElementById('canvas')).setSize();
 const cursor = new Cursor($gcanvas.get('canvas'));
 const dots = new Dots($gcanvas);
+
+dots.add(300, 300);
+dots.add(600, 300);
+dots.add(600, 600);
+dots.add(450, 450);
+
+dots.addPath(1,2);
+dots.addPath(2,3);
+dots.addPath(3,2);
+dots.addPath(2,4);
 
 $gcanvas.on('mousedown', () => {
     const dot = dots.getByCoordinates(cursor.x, cursor.y, 0);
@@ -60,6 +71,8 @@ $gcanvas.on('mousedown', () => {
     }
 });
 
+window.test1 = dots.maximal_independent_set;
+window.test1();
 // $gcanvas.on('dblclick', () => dots.removeByCoordinates(cursor.x, cursor.y));
 
 function Render() {
@@ -69,7 +82,7 @@ function Render() {
         $gcanvas.gLine(cursor.getObj("click").x, cursor.getObj("click").y, cursor.x, cursor.y);
     }
 
-    dots.show();
+    dots.print();
 }
 
 Render();
