@@ -60,8 +60,10 @@ export default class Dots {
     };
 
     maximal_independent_set = () => {
-        const conjunctions = [];
-        const disjunctions = [];
+        let conjunctions = [];
+        let disjunctions_temp = [];
+        let disjunctions = [];
+        let dots_ids = this.dots.map(({id}) => id);
 
         this.dots.forEach(dot => dot.paths.forEach(path => conjunctions.push([dot.id, path.id])));
 
@@ -71,7 +73,27 @@ export default class Dots {
                 conjunctions.splice(index, 1);
             }
         });
-        console.log(conjunctions);
-        // conjunctions.forEach(left => conjunctions.forEach(right) => )
+
+        const rec_conjunction = (array, index = 0) => {
+                    if(array.length - 1 === index) {
+                         array[index].forEach(el => disjunctions.push([...disjunctions_temp, el]))
+                    } else {
+                        array[index].forEach(el => {
+                            disjunctions_temp.push(el);
+                            rec_conjunction(array, index + 1);
+                            disjunctions_temp.pop();
+                        });
+                    }
+        };
+
+        rec_conjunction(conjunctions);
+
+        let min_length = disjunctions
+            .map((dis, i, array) => array[i]  = [...new Set(dis)])
+            .reduce((min, current) => current.length < min || min === -1 ? current.length : min, -1);
+
+        return disjunctions
+            .filter(dis => dis.length === min_length)
+            .map(dis => dots_ids.filter(id => dis.findIndex(el => el === id) === -1));
     }
 }
