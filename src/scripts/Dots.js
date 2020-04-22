@@ -32,6 +32,10 @@ export default class Dots {
         if (Number.isInteger(d2)) {
             d2 = this.dots[this.getById(d2)];
         }
+        if(d1 === undefined || d2 === undefined) {
+            console.warn("Dots::addPath", d1, d2);
+            return;
+        }
 
         if (d1.id === d2.id || !d1.paths.every(dot => dot.id !== d2.id)) {
             return;
@@ -65,35 +69,73 @@ export default class Dots {
         let disjunctions = [];
         let dots_ids = this.dots.map(({id}) => id);
 
+        console.time("maximal_independent_set_1");
         this.dots.forEach(dot => dot.paths.forEach(path => conjunctions.push([dot.id, path.id])));
+        console.timeEnd("maximal_independent_set_1");
 
+        if(conjunctions.length === 0) return [];
+
+        console.time("maximal_independent_set_2");
         conjunctions.forEach(pair => {
             let index = conjunctions.findIndex(next_pair => next_pair[0] === pair[1] && next_pair[1] === pair[0]);
-            if(index >= 0) {
+            if (index >= 0) {
                 conjunctions.splice(index, 1);
             }
         });
+        console.timeEnd("maximal_independent_set_2");
 
+        console.time("maximal_independent_set_3");
         const rec_conjunction = (array, index = 0) => {
-                    if(array.length - 1 === index) {
-                         array[index].forEach(el => disjunctions.push([...disjunctions_temp, el]))
-                    } else {
-                        array[index].forEach(el => {
-                            disjunctions_temp.push(el);
-                            rec_conjunction(array, index + 1);
-                            disjunctions_temp.pop();
-                        });
-                    }
+            if (array.length - 1 === index) {
+                array[index].forEach(el => {
+                    disjunctions.push([...disjunctions_temp, el]);
+                });
+            } else {
+                array[index].forEach(el => {
+                    disjunctions_temp.push(el);
+                    rec_conjunction(array, index + 1);
+                    disjunctions_temp.pop();
+                });
+            }
         };
 
         rec_conjunction(conjunctions);
+        console.timeEnd("maximal_independent_set_3");
 
+        console.time("maximal_independent_set_4");
         let min_length = disjunctions
-            .map((dis, i, array) => array[i]  = [...new Set(dis)])
-            .reduce((min, current) => current.length < min || min === -1 ? current.length : min, -1);
+            .filter((dis) => {
+                for (let i = 0; i < dis.length; i++) {
+                    for (let j = i + 1; j < dis.length; j++) {
+                        if(dis[i] === dis[j]) {
+                            dis.splice(j, 1);
+                        }
+                    }
+                }
+                return true;
+            })
+            .reduce((min, current) => {
+                return current.length < min || min === -1 ? current.length : min;
+            }, -1);
+        console.timeEnd("maximal_independent_set_4");
 
-        return disjunctions
+        console.time("maximal_independent_set_5");
+        const result =  disjunctions
             .filter(dis => dis.length === min_length)
-            .map(dis => dots_ids.filter(id => dis.findIndex(el => el === id) === -1));
-    }
+            .map(dis => dots_ids.filter(id => dis.findIndex(el => el === id) === -1))
+            .filter((dis, i, array) => {
+                let isEqual;
+                let j = i + 1;
+
+                while (j < array.length) {
+                    isEqual = dis.every((d, d_i) => d === array[j][d_i]);
+                    if(isEqual)  array.splice(j, 1);
+                    else j++;
+                }
+
+                return true
+            });
+        console.timeEnd("maximal_independent_set_5");
+        return result;
+    };
 }
