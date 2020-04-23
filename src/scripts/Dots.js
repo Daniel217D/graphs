@@ -64,78 +64,117 @@ export default class Dots {
     };
 
     maximal_independent_set = () => {
+        if(this.dots.length === 0) return false; // если граф пустой возвращаем false
+
         let conjunctions = [];
         let disjunctions_temp = [];
         let disjunctions = [];
         let dots_ids = this.dots.map(({id}) => id);
 
-        console.time("maximal_independent_set_1");
         this.dots.forEach(dot => dot.paths.forEach(path => conjunctions.push([dot.id, path.id])));
-        console.timeEnd("maximal_independent_set_1");
 
-        if(conjunctions.length === 0) return [];
+        if(conjunctions.length === 0) return dots_ids.map(id => [id]); // если в массиве нет ребер, возвращаем все точки
 
-        console.time("maximal_independent_set_2");
         conjunctions.forEach(pair => {
             let index = conjunctions.findIndex(next_pair => next_pair[0] === pair[1] && next_pair[1] === pair[0]);
             if (index >= 0) {
                 conjunctions.splice(index, 1);
             }
         });
-        console.timeEnd("maximal_independent_set_2");
 
-        console.time("maximal_independent_set_3");
+        let rec_conjunction_min_length = this.dots.length;
+
         const rec_conjunction = (array, index = 0) => {
+            let wasSuchEl;
             if (array.length - 1 === index) {
                 array[index].forEach(el => {
-                    disjunctions.push([...disjunctions_temp, el]);
+                    wasSuchEl = disjunctions_temp.includes(el);
+
+                    if (disjunctions_temp.length + !wasSuchEl <= rec_conjunction_min_length) {
+                        // console.log("/");
+                        if (disjunctions_temp.length + !wasSuchEl < rec_conjunction_min_length) {
+                            // console.log(disjunctions_temp.length + !wasSuchEl, rec_conjunction_min_length, "!");
+                            rec_conjunction_min_length = disjunctions_temp.length + !wasSuchEl;
+                            disjunctions = [];
+                        }
+                        const push = wasSuchEl ? [...disjunctions_temp] : [...disjunctions_temp, el];
+                        const canPush = !disjunctions.some(dis => dis.every(d => push.includes(d)));
+                        if (canPush) disjunctions.push(push);
+                    }
                 });
             } else {
                 array[index].forEach(el => {
-                    disjunctions_temp.push(el);
-                    rec_conjunction(array, index + 1);
-                    disjunctions_temp.pop();
+                    wasSuchEl = disjunctions_temp.includes(el);
+                    if(disjunctions_temp.length + !wasSuchEl<= rec_conjunction_min_length) {
+                        if(!wasSuchEl) disjunctions_temp.push(el);
+                        rec_conjunction(array, index + 1);
+                        if(!wasSuchEl) disjunctions_temp.pop();
+                    }
                 });
             }
         };
-
+        console.time("maximal_independent_set-multiply");
         rec_conjunction(conjunctions);
-        console.timeEnd("maximal_independent_set_3");
+        console.timeEnd("maximal_independent_set-multiply");
+        return disjunctions
+             .map(dis => dots_ids.filter(id => dis.findIndex(el => el === id) === -1)) // инвертирование полученных вершин
+            .reverse(); // располагаем точки по возрастанию id первой вершины\
+    };
 
-        console.time("maximal_independent_set_4");
-        let min_length = disjunctions
-            .filter((dis) => {
-                for (let i = 0; i < dis.length; i++) {
-                    for (let j = i + 1; j < dis.length; j++) {
-                        if(dis[i] === dis[j]) {
-                            dis.splice(j, 1);
-                        }
+    maximal_independent_set2 = () => {
+        if (this.dots.length === 0) return false; // если граф пустой возвращаем false
+
+        let conjunctions = [];
+        let helper = []; //TODO rename
+        const dots_ids = this.dots.map(({id}) => id);
+
+        this.dots.forEach(dot => dot.paths.forEach(path => conjunctions.push([dot.id, path.id])));
+
+        if (conjunctions.length === 0) return dots_ids.map(id => [id]); // если в массиве нет ребер, возвращаем все точки
+
+        conjunctions.forEach(pair => {
+            let index = conjunctions.findIndex(next_pair => next_pair[0] === pair[1] && next_pair[1] === pair[0]);
+            if (index >= 0) {
+                conjunctions.splice(index, 1);
+            }
+        });
+
+
+        const rec = (array, index = 0) => {
+            if (array.length - 1 === index) {
+                helper = [[array[index][0]], [array[index][1]]];
+                return;
+            }
+
+            rec(array, index + 1);
+
+
+            let temp = [
+                ...helper.map(dis => dis.includes(array[index][0]) ? [...dis] : [array[index][0], ...dis]),
+                ...helper.map(dis => dis.includes(array[index][1]) ? [...dis] : [array[index][1], ...dis]),
+            ];
+
+            helper= [];
+            for (let i = 0; i < temp.length; i++) {
+                if (!Array.isArray(temp[i])) continue;
+
+                for (let j = i + 1; j < temp.length; j++) {
+                    if (Array.isArray(temp[j]) && temp[i].length === temp[j].length && temp[j].every(el => temp[i].includes(el))) {
+                        temp[j] = false;
                     }
                 }
-                return true;
-            })
-            .reduce((min, current) => {
-                return current.length < min || min === -1 ? current.length : min;
-            }, -1);
-        console.timeEnd("maximal_independent_set_4");
 
-        console.time("maximal_independent_set_5");
-        const result =  disjunctions
-            .filter(dis => dis.length === min_length)
-            .map(dis => dots_ids.filter(id => dis.findIndex(el => el === id) === -1))
-            .filter((dis, i, array) => {
-                let isEqual;
-                let j = i + 1;
+                helper.push(temp[i]);
+            }
+        };
+        console.time("rec");
+        rec(conjunctions);
+        console.timeEnd("rec");
 
-                while (j < array.length) {
-                    isEqual = dis.every((d, d_i) => d === array[j][d_i]);
-                    if(isEqual)  array.splice(j, 1);
-                    else j++;
-                }
+        const min_length = helper.reduce((min, arr) => arr.length < min ? arr.length : min, helper[0].length);
+        return helper.filter(arr => arr.length === min_length)
+            .map(dis => dots_ids.filter(id => dis.findIndex(el => el === id) === -1)) // инвертирование полученных вершин
+            .reverse(); // располагаем точки по возрастанию id первой вершины
 
-                return true
-            });
-        console.timeEnd("maximal_independent_set_5");
-        return result;
     };
 }
