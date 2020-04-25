@@ -8,9 +8,11 @@ export default class Dots {
 
     dots = [];
 
-    getById = (id) => {
+    getIndexById = (id) => {
         return this.dots.findIndex(dot => dot.id === id);
     };
+
+    getDotById = (id) => this.dots[this.getIndexById(id)];
 
     getByCoordinates = (x, y, more = {}) => {
         more = Object.assign({r: defaults.r, except: []}, more);
@@ -29,11 +31,11 @@ export default class Dots {
 
     addPath = (d1, d2) => {
         if (Number.isInteger(d1)) {
-            d1 = this.dots[this.getById(d1)];
+            d1 = this.getDotById(d1);
         }
 
         if (Number.isInteger(d2)) {
-            d2 = this.dots[this.getById(d2)];
+            d2 = this.getDotById(d2);
         }
         if (d1 === undefined || d2 === undefined) {
             console.warn("Dots::addPath", d1, d2);
@@ -50,7 +52,7 @@ export default class Dots {
     addPaths = (arr) => arr.forEach(args => this.addPath(...args));
 
     remove = (id) => {
-        this.dots.splice(this.getById(id), 1);
+        this.dots.splice(this.getIndexById(id), 1);
     };
 
     clear = () => this.dots = [];
