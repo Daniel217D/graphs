@@ -25,6 +25,8 @@ export default class Dots {
         return dot;
     };
 
+    addDots = (arr) => arr.forEach(args => this.add(...args));
+
     addPath = (d1, d2) => {
         if (Number.isInteger(d1)) {
             d1 = this.dots[this.getById(d1)];
