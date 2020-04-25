@@ -80,6 +80,14 @@ $gcanvas.on('mousedown', () => {
 
 ].forEach(({id, func}) => document.getElementById(id).addEventListener('click', func));
 
+status.field.addEventListener('mouseover', ({target}) => {
+    if(target.tagName === "LI") {
+        const array = target.getAttribute('data-array').split(',');
+        array.forEach(dotId => dots.getDotById(parseInt(dotId)).color = "blue");
+
+        target.addEventListener('mouseleave', () => array.forEach(dotId => dots.getDotById(parseInt(dotId)).color = "black", {once: true}))
+    }
+});
 
 function Render() {
     requestAnimationFrame(Render);
