@@ -25,7 +25,7 @@ $gcanvas.on('mousedown', () => {
     if (cursor.statusIs("drag", "dot")) {
         const draggableDotId = cursor.getObj("drag").id;
         const dot = dots.getByCoordinates(cursor.x, cursor.y, {except: [draggableDotId]});
-        if(!dot || dot.id === draggableDotId) {
+        if (!dot || dot.id === draggableDotId) {
             cursor.getObj("drag").setPos(cursor.x, cursor.y);
         }
     }
@@ -60,7 +60,7 @@ $gcanvas.on('mousedown', () => {
         }
     }
 }).on('contextmenu', (e) => {
-    if(cursor.statusIs("click", "dot")) {
+    if (cursor.statusIs("click", "dot")) {
         cursor.set("click", false);
     }
     e.preventDefault();

@@ -12,11 +12,11 @@ class CanvasCMGraphs extends CanvasCM {
         const exArrow = ex - dir.x * 2 * SIZE;
         const eyArrow = ey - dir.y * 2 * SIZE;
 
-        const arrow1 = angleToDirection(angle(sxArrow, syArrow, exArrow, eyArrow) - ( 30 * Math.PI / 180));
-        const arrow2 = angleToDirection(angle(sxArrow, syArrow, exArrow, eyArrow) + ( 30 * Math.PI / 180));
+        const arrow1 = angleToDirection(angle(sxArrow, syArrow, exArrow, eyArrow) - (30 * Math.PI / 180));
+        const arrow2 = angleToDirection(angle(sxArrow, syArrow, exArrow, eyArrow) + (30 * Math.PI / 180));
 
         return this.gLine(sx, sy, ex, ey)
-            .gLine(sxArrow, syArrow, sxArrow + arrow1.x * SIZE , syArrow + arrow1.y * SIZE)
+            .gLine(sxArrow, syArrow, sxArrow + arrow1.x * SIZE, syArrow + arrow1.y * SIZE)
             .gLine(sxArrow, syArrow, sxArrow + arrow2.x * SIZE, syArrow + arrow2.y * SIZE);
     };
 

@@ -13,7 +13,7 @@ export default class Dots {
     };
 
     getByCoordinates = (x, y, more = {}) => {
-        more = Object.assign({r: defaults.r, except:[]}, more);
+        more = Object.assign({r: defaults.r, except: []}, more);
         return this.dots.find(dot => distance(x, y, dot.x, dot.y) <= dot.r + more.r && !more.except.includes(dot.id));
     };
 
@@ -33,7 +33,7 @@ export default class Dots {
         if (Number.isInteger(d2)) {
             d2 = this.dots[this.getById(d2)];
         }
-        if(d1 === undefined || d2 === undefined) {
+        if (d1 === undefined || d2 === undefined) {
             console.warn("Dots::addPath", d1, d2);
             return;
         }
@@ -65,7 +65,7 @@ export default class Dots {
     };
 
     maximal_independent_set = () => {
-        if(this.dots.length === 0) return []; // если граф пустой возвращаем пустой массив
+        if (this.dots.length === 0) return []; // если граф пустой возвращаем пустой массив
 
         let conjunctions = []; // массив парных дизъюнкций
         let disjunctions = []; // массив днф
@@ -76,7 +76,7 @@ export default class Dots {
         this.dots.forEach(dot => dot.paths.forEach(path => conjunctions.push([dot.id, path.id])));
 
         // если в массиве нет ребер, возвращаем массив со всеми вершинами
-        if(conjunctions.length === 0) return [dots_ids.map(id => id)];
+        if (conjunctions.length === 0) return [dots_ids.map(id => id)];
 
         // убираем дизъюнкии отличающееся положением переменных
         // [[1,2],[2,3],[2,1]] => [[1,2],[2,3]]
@@ -128,13 +128,13 @@ export default class Dots {
                     wasSuchEl = disjunctions_temp.includes(el);
                     // Провека на то что провемежуточный массив содержит не больше вершин чем минимум
                     // Учитывая включение/невключение переменной el
-                    if(disjunctions_temp.length + !wasSuchEl<= rec_conjunction_min_length) {
+                    if (disjunctions_temp.length + !wasSuchEl <= rec_conjunction_min_length) {
                         //Если переменной el не было добавляем
-                        if(!wasSuchEl) disjunctions_temp.push(el);
+                        if (!wasSuchEl) disjunctions_temp.push(el);
                         //Продолжаем рекурсию
                         rec_conjunction(array, index + 1);
                         ////Если переменная el была убираем
-                        if(!wasSuchEl) disjunctions_temp.pop();
+                        if (!wasSuchEl) disjunctions_temp.pop();
                     }
                 });
             }
@@ -143,7 +143,7 @@ export default class Dots {
         rec_conjunction(conjunctions);
 
         return disjunctions
-             .map(dis => dots_ids.filter(id => dis.findIndex(el => el === id) === -1)) // инвертирование полученных вершин
+            .map(dis => dots_ids.filter(id => dis.findIndex(el => el === id) === -1)) // инвертирование полученных вершин
             .reverse(); // располагаем точки по возрастанию id первой вершины
     };
 }
