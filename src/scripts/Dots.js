@@ -219,14 +219,14 @@ export default class Dots {
             const crossing = [...new Set(i.filter(x => e.includes(x)))];
             if (crossing.length >= max) {
                 if (withMaxLength && crossing.length > max) {
-                        cores = [];
-                        max = crossing.length;
+                    cores = [];
+                    max = crossing.length;
                 }
                 const canPush = !cores.some(core => core.length === crossing.length && core.every(c => crossing.includes(c)));
-                if(canPush) cores.push(crossing);
+                if (canPush) cores.push(crossing);
             }
         }));
 
         return cores;
-    }
+    };
 }

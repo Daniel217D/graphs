@@ -11,16 +11,16 @@ export default class Status {
         if (status !== false) this.set(status);
         let text = "";
 
-        if(status.length === 0) {
-            text = "Пустое множество"
-        }else if(Array.isArray(status)) {
+        if (status.length === 0) {
+            text = "Пустое множество";
+        } else if (Array.isArray(status)) {
             text = "<ul>";
             status.forEach(sub => {
                 text += "<li>";
                 sub.forEach(el => {
-                   text += el + ", ";
+                    text += el + ", ";
                 });
-                text = text.substring(0, text.length-2);
+                text = text.substring(0, text.length - 2);
                 text += ";</li>";
             });
             text += "</ul>";
