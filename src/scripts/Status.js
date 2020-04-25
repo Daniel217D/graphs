@@ -14,16 +14,20 @@ export default class Status {
         if (status.length === 0) {
             text = "Пустое множество";
         } else if (Array.isArray(status)) {
-            text = "<ul>";
             status.forEach(sub => {
-                text += "<li>";
+                let li = "";
+                let data = "";
+
                 sub.forEach(el => {
-                    text += el + ", ";
+                    li += el + ", ";
+                    data += el+",";
                 });
-                text = text.substring(0, text.length - 2);
-                text += ";</li>";
+
+                li = li.substring(0, li.length - 2);
+                data = data.substring(0, data.length - 1);
+                text += "<li data-array='"+data+"'>" + li + ";</li>";
             });
-            text += "</ul>";
+            text = "<ul>" + text + "</ul>";
         } else {
             text = status;
         }
