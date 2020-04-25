@@ -4,32 +4,21 @@ export default class DotsExamples {
     }
 
     demo1 = () => {
-        dots.add(300, 300); //1
-        dots.add(600, 300);
-        dots.add(600, 600);
-        dots.add(350, 700);
-        dots.add(800, 700); //5
-        dots.add(800, 200);
-        dots.add(800, 300);
-        dots.add(900, 400);
-        dots.add(800, 500);
-        dots.add(200, 500); //10
-        dots.addPath(1,2);
-        dots.addPath(1,10);
-        dots.addPath(1,4);
-        dots.addPath(2,3);
-        dots.addPath(3,2);
-        dots.addPath(3,5);
-        dots.addPath(3,4);
-        dots.addPath(2,4);
-        dots.addPath(5,2);
-        dots.addPath(5,4);
-        dots.addPath(6,2);
-        dots.addPath(6,7);
-        dots.addPath(7,8);
-        dots.addPath(8,5);
-        dots.addPath(8,9);
-        dots.addPath(9,5);
-        dots.addPath(10,4);
-    }
+        this.dots.clear();
+        this.dots.addDots([
+            [300, 300], [600, 300], [600, 600], [350, 700], [800, 700],
+            [800, 200], [800, 300], [900, 400], [800, 500], [200, 500]
+        ]);
+        this.dots.addPaths([
+            [1, 2], [1, 10], [1, 4], [2, 3], [3, 2], [3, 5], [3, 4],
+            [2, 4], [5, 2], [5, 4], [6, 2], [6, 7], [7, 8], [8, 5], [8, 9],
+            [9, 5], [10, 4]
+        ]);
+    };
+
+    demo2 = () => {
+        this.dots.clear();
+        this.dots.addDots([[300, 300], [600, 300], [600, 600], [300, 600]]);
+        this.dots.addPaths([[1, 2], [1, 3], [1, 4], [2, 1], [3, 1], [4, 3]]);
+    };
 }
