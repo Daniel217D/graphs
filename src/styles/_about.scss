@@ -3,18 +3,23 @@ $main: rgba(57, 223, 127, 0.8);
 .about {
 	position: absolute;
 	top: 10px;
-	left: 10px;
+	right: -10px;
 	padding: 0 20px 20px 20px;
 	background-color: $main;
 	border-radius: 5px;
-	//pointer-events: none;
+	pointer-events: none;
 
 	&-title {
 		font-size: 16px;
 	}
 
 	&-list {
+		margin-bottom: 10px;
 		font-size: 14px;
+
+		button {
+			pointer-events: auto;
+		}
 	}
 
 	&-item {
@@ -23,5 +28,9 @@ $main: rgba(57, 223, 127, 0.8);
 		&_additional {
 			padding-left: 10px;
 		}
+	}
+
+	&-status {
+		font-size: 24px;
 	}
 }
