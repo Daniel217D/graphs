@@ -56,7 +56,7 @@ export default class Dots {
         this.dots.forEach(dot => dot.printDot(this.$gcanvas));
     };
 
-    maximal_independent_set = () => {
+    maximal_internal_stability = () => {
         if (this.dots.length === 0) return []; // если граф пустой возвращаем пустой массив
 
         let conjunctions = []; // массив парных дизъюнкций
@@ -84,7 +84,7 @@ export default class Dots {
         требуется найти минимальные по длине дизъюнкции, чтобы затем их инвертировать
         и получить наборы с максимальным количеством независимых вершин
         */
-        let rec_conjunction_min_length = this.dots.length;
+        let rec_conjunction_max_length = this.dots.length;
 
         // рекурсивная функция для приведения массива парных дизъюнкций к массиву днф
         const rec_conjunction = (array, index = 0) => {
@@ -97,11 +97,11 @@ export default class Dots {
                     wasSuchEl = disjunctions_temp.includes(el);
                     // Провека на то что провемежуточный массив содержит не больше вершин чем минимум
                     // Учитывая включение/невключение переменной el
-                    if (disjunctions_temp.length + !wasSuchEl <= rec_conjunction_min_length) {
+                    if (disjunctions_temp.length + !wasSuchEl <= rec_conjunction_max_length) {
                         // Если промежуточный массив в итоге получился короче, то
                         // выставляем новую минимальную длину и обнуляем массив днф
-                        if (disjunctions_temp.length + !wasSuchEl < rec_conjunction_min_length) {
-                            rec_conjunction_min_length = disjunctions_temp.length + !wasSuchEl;
+                        if (disjunctions_temp.length + !wasSuchEl < rec_conjunction_max_length) {
+                            rec_conjunction_max_length = disjunctions_temp.length + !wasSuchEl;
                             disjunctions = [];
                         }
                         // В переменную помещается все элементы массива disjunctions_temp и переменая el если её нет в массиве
@@ -120,7 +120,7 @@ export default class Dots {
                     wasSuchEl = disjunctions_temp.includes(el);
                     // Провека на то что провемежуточный массив содержит не больше вершин чем минимум
                     // Учитывая включение/невключение переменной el
-                    if (disjunctions_temp.length + !wasSuchEl <= rec_conjunction_min_length) {
+                    if (disjunctions_temp.length + !wasSuchEl <= rec_conjunction_max_length) {
                         //Если переменной el не было добавляем
                         if (!wasSuchEl) disjunctions_temp.push(el);
                         //Продолжаем рекурсию
@@ -138,4 +138,72 @@ export default class Dots {
             .map(dis => dots_ids.filter(id => dis.findIndex(el => el === id) === -1)) // инвертирование полученных вершин
             .reverse(); // располагаем точки по возрастанию id первой вершины
     };
+
+    minimal_external_stability = () => {
+        if (this.dots.length === 0) return []; // если граф пустой возвращаем пустой массив
+
+        let conjunctions = []; // массив дизъюнкций
+        let disjunctions = []; // массив днф
+        let disjunctions_temp = []; // провемежуточный массив с переменными входящими в одну из конъюнкций днф
+        let dots_ids = this.dots.map(({id}) => id); // массив id точек
+
+        // составляется массив парных дизъюнкций
+        this.dots.forEach(dot => conjunctions.push([dot.id, ...dot.paths.map(path => path.id)]));
+
+        // если в массиве нет ребер, возвращаем массив со всеми вершинами
+        if (conjunctions.length === 0) return [dots_ids.map(id => id)];
+
+        // убираем дизъюнкии отличающееся положением переменных
+        conjunctions.forEach((conj, index, array) => {
+            for (let i = index + 1; i < array.length; i++) {
+                if (array[i].length === conj.length && array[i].every(el => conj.includes(el))) {
+                    array.splice(i, 1);
+                }
+            }
+        });
+
+        // рекурсивная функция для приведения массива парных дизъюнкций к массиву днф
+        const rec_conjunction = (array, index = 0) => {
+            let wasSuchEl;
+            //Если дошли до последней пары дизъюнкций ...
+            if (array.length - 1 === index) {
+                //Цикл переберает  переменные (id вершин) в ююю
+                array[index].forEach(el => {
+                    // Проверка, есть ли переменная в промежуточной конъюнкции
+                    wasSuchEl = disjunctions_temp.includes(el);
+                    // В переменную помещается все элементы массива disjunctions_temp и переменая el если её нет в массиве
+                    const push = wasSuchEl ? [...disjunctions_temp] : [...disjunctions_temp, el];
+                    // Проверка, что такого набора вершин еще нет в днф
+                    // Если массив push не совпадает со всеми массивом в disjunctions, то...
+                    const canPush = !disjunctions.some(dis => push.length >= dis.length && dis.every(d => push.includes(d)));
+                    // Добавляем его в disjunctions (днф)
+                    if (canPush) {
+                        disjunctions = disjunctions.filter(dis => dis.length <= push.length || !push.every(p => dis.includes(p)));
+                        disjunctions.push(push);
+                    }
+                });
+            } else {// Иначе
+                //Цикл переберает левую и правую переменную (id вершин) в ююю
+                array[index].forEach(el => {
+                    // Проверка, есть ли переменная в промежуточной конъюнкции
+                    wasSuchEl = disjunctions_temp.includes(el);
+                    //Если переменной el не было добавляем
+                    if (!wasSuchEl) disjunctions_temp.push(el);
+                    //Продолжаем рекурсию
+                    rec_conjunction(array, index + 1);
+                    //Если переменная el была убираем
+                    if (!wasSuchEl) disjunctions_temp.pop();
+                });
+            }
+        };
+
+        //Запуск функции
+        rec_conjunction(conjunctions);
+
+        const min = disjunctions.reduce((min, arr) => arr.length < min ? arr.length : min, disjunctions[0].length);
+
+        return disjunctions.filter(dis => dis.length === min);
+    };
+
+
 }
