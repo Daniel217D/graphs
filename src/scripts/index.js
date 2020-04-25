@@ -66,7 +66,8 @@ $gcanvas.on('mousedown', () => {
     e.preventDefault();
 });
 
-// $gcanvas.on('dblclick', () => dots.removeByCoordinates(cursor.x, cursor.y));
+const clearBtn = document.getElementById("canvas-clear");
+clearBtn.addEventListener("click", () => dots.clear());
 
 function Render() {
     requestAnimationFrame(Render);
