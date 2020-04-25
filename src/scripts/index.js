@@ -11,7 +11,7 @@ const dots = new Dots($gcanvas);
 
 
 $gcanvas.on('mousedown', () => {
-    const dot = dots.getByCoordinates(cursor.x, cursor.y, 0);
+    const dot = dots.getByCoordinates(cursor.x, cursor.y, {r: 0});
     if (dot) {
         cursor.set("mousedown", "dot", dot);
     }
@@ -23,8 +23,9 @@ $gcanvas.on('mousedown', () => {
     }
 
     if (cursor.statusIs("drag", "dot")) {
-        const dot = dots.getByCoordinates(cursor.x, cursor.y);
-        if(!dot || dot.id === cursor.getObj("drag").id) {
+        const draggableDotId = cursor.getObj("drag").id;
+        const dot = dots.getByCoordinates(cursor.x, cursor.y, {except: [draggableDotId]});
+        if(!dot || dot.id === draggableDotId) {
             cursor.getObj("drag").setPos(cursor.x, cursor.y);
         }
     }
@@ -41,7 +42,7 @@ $gcanvas.on('mousedown', () => {
     const dot = dots.getByCoordinates(cursor.x, cursor.y);
 
     if (dot) {
-        const dot_r0 = dots.getByCoordinates(cursor.x, cursor.y, 0);
+        const dot_r0 = dots.getByCoordinates(cursor.x, cursor.y, {r: 0});
         if (dot_r0 && !cursor.statusIs('click', 'dot')) {
             cursor.set("click", "dot", dot);
         } else if (cursor.statusIs("click", "dot")) {

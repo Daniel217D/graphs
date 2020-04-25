@@ -12,8 +12,9 @@ export default class Dots {
         return this.dots.findIndex(dot => dot.id === id);
     };
 
-    getByCoordinates = (x, y, r = defaults.r) => {
-        return this.dots.find(dot => distance(x, y, dot.x, dot.y) <= dot.r + r);
+    getByCoordinates = (x, y, more = {}) => {
+        more = Object.assign({r: defaults.r, except:[]}, more);
+        return this.dots.find(dot => distance(x, y, dot.x, dot.y) <= dot.r + more.r && !more.except.includes(dot.id));
     };
 
     getLastId = () => this.dots[this.dots.length - 1]?.id || 0;
