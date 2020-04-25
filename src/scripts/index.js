@@ -69,13 +69,14 @@ $gcanvas.on('mousedown', () => {
     e.preventDefault();
 });
 
-const clearBtn = document.getElementById("canvas-clear");
-clearBtn.addEventListener("click", () => dots.clear());
+[
+    {id: "canvas-clear", func: dots.clear},
+    {id: "canvas-maximal_internal_stability", func: () => console.log(dots.maximal_internal_stability())},
+    {id: "canvas-minimal_external_stability", func: () => console.log(dots.minimal_external_stability())},
+    {id: "canvas-cores", func: () => console.log(dots.cores())},
+    {id: "canvas-cores__maximal", func: () => console.log(dots.cores(true))}
 
-window.test1 = () => {
-    console.log(dots.cores());
-    console.log(dots.cores(true));
-};
+].forEach(({id, func}) => document.getElementById(id).addEventListener('click', func));
 
 function Render() {
     requestAnimationFrame(Render);
