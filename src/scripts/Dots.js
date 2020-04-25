@@ -49,6 +49,8 @@ export default class Dots {
         this.dots.splice(this.getById(id), 1);
     };
 
+    clear = () => this.dots = [];
+
     print = () => {
         this.dots.forEach(dot => dot.printPaths(this.$gcanvas));
         this.dots.forEach(dot => dot.printDot(this.$gcanvas));
