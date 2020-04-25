@@ -45,16 +45,6 @@ export default class Dots {
         d1.addPath(d2);
     };
 
-    removeByCoordinates = (x, y) => {
-        this.dots.some(dot => {
-            if (distance(x, y, dot.x, dot.y) <= dot.r) {
-                this.remove(dot.id);
-                return true;
-            }
-            return false;
-        });
-    };
-
     remove = (id) => {
         this.dots.splice(this.getById(id), 1);
     };
