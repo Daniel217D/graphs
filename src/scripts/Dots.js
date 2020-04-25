@@ -47,6 +47,8 @@ export default class Dots {
         d1.addPath(d2);
     };
 
+    addPaths = (arr) => arr.forEach(args => this.addPath(...args));
+
     remove = (id) => {
         this.dots.splice(this.getById(id), 1);
     };
