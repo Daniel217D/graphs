@@ -222,7 +222,8 @@ export default class Dots {
                         cores = [];
                         max = crossing.length;
                 }
-                cores.push(crossing);
+                const canPush = !cores.some(core => core.length === crossing.length && core.every(c => crossing.includes(c)));
+                if(canPush) cores.push(crossing);
             }
         }));
 
