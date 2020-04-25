@@ -205,5 +205,23 @@ export default class Dots {
         return disjunctions.filter(dis => dis.length === min);
     };
 
+    cores = (withMaxLength = false) => {
+        const internal = this.maximal_internal_stability();
+        const external = this.minimal_external_stability();
+        let cores = [];
+        let max = 1;
 
+        internal.forEach(i => external.forEach(e => {
+            const crossing = [...new Set(i.filter(x => e.includes(x)))];
+            if (crossing.length >= max) {
+                if (withMaxLength && crossing.length > max) {
+                        cores = [];
+                        max = crossing.length;
+                }
+                cores.push(crossing);
+            }
+        }));
+
+        return cores;
+    }
 }
