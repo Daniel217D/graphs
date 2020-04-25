@@ -32,5 +32,14 @@ $main: rgba(57, 223, 127, 0.8);
 
 	&-status {
 		font-size: 24px;
+
+		li {
+			cursor: pointer;
+			pointer-events: auto;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
 	}
 }
