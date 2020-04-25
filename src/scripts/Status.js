@@ -20,12 +20,12 @@ export default class Status {
 
                 sub.forEach(el => {
                     li += el + ", ";
-                    data += el+",";
+                    data += el + ",";
                 });
 
                 li = li.substring(0, li.length - 2);
                 data = data.substring(0, data.length - 1);
-                text += "<li data-array='"+data+"'>" + li + ";</li>";
+                text += "<li data-array='" + data + "'>" + li + ";</li>";
             });
             text = "<ul>" + text + "</ul>";
         } else {
