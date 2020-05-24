@@ -62,7 +62,8 @@ export default class Dots {
         this.dots.forEach(dot => dot.printDot(this.$gcanvas));
     };
 
-    maximal_internal_stability = () => {
+    internal_stability = (maximal = false) => {
+        maximal = !maximal;
         if (this.dots.length === 0) return []; // если граф пустой возвращаем пустой массив
 
         let conjunctions = []; // массив парных дизъюнкций
@@ -103,10 +104,10 @@ export default class Dots {
                     wasSuchEl = disjunctions_temp.includes(el);
                     // Провека на то что провемежуточный массив содержит не больше вершин чем минимум
                     // Учитывая включение/невключение переменной el
-                    if (disjunctions_temp.length + !wasSuchEl <= rec_conjunction_max_length) {
+                    if (maximal || disjunctions_temp.length + !wasSuchEl <= rec_conjunction_max_length) {
                         // Если промежуточный массив в итоге получился короче, то
                         // выставляем новую минимальную длину и обнуляем массив днф
-                        if (disjunctions_temp.length + !wasSuchEl < rec_conjunction_max_length) {
+                        if (!maximal && disjunctions_temp.length + !wasSuchEl < rec_conjunction_max_length) {
                             rec_conjunction_max_length = disjunctions_temp.length + !wasSuchEl;
                             disjunctions = [];
                         }
@@ -126,7 +127,7 @@ export default class Dots {
                     wasSuchEl = disjunctions_temp.includes(el);
                     // Провека на то что провемежуточный массив содержит не больше вершин чем минимум
                     // Учитывая включение/невключение переменной el
-                    if (disjunctions_temp.length + !wasSuchEl <= rec_conjunction_max_length) {
+                    if (maximal || disjunctions_temp.length + !wasSuchEl <= rec_conjunction_max_length) {
                         //Если переменной el не было добавляем
                         if (!wasSuchEl) disjunctions_temp.push(el);
                         //Продолжаем рекурсию
@@ -145,7 +146,7 @@ export default class Dots {
             .reverse(); // располагаем точки по возрастанию id первой вершины
     };
 
-    minimal_external_stability = () => {
+    external_stability = (minimal = false) => {
         if (this.dots.length === 0) return []; // если граф пустой возвращаем пустой массив
 
         let conjunctions = []; // массив дизъюнкций
@@ -206,20 +207,33 @@ export default class Dots {
         //Запуск функции
         rec_conjunction(conjunctions);
 
-        const min = disjunctions.reduce((min, arr) => arr.length < min ? arr.length : min, disjunctions[0].length);
+        if(minimal) {
+            const min = disjunctions.reduce((min, arr) => arr.length < min ? arr.length : min, disjunctions[0].length);
 
-        return disjunctions.filter(dis => dis.length === min);
+            return disjunctions.filter(dis => dis.length === min);
+        } else {
+            return  disjunctions;
+        }
+
     };
 
     cores = () => {
-        const internal = this.maximal_internal_stability();
-        const external = this.minimal_external_stability();
-        const arr = [...internal, ...external];
+        const internal = this.internal_stability();
+        const external = this.external_stability();
+
+        const max_internal = internal.reduce((min, arr) => arr.length < min ? arr.length : min, internal[0].length);
+        const min_external = internal.reduce((min, arr) => arr.length < min ? arr.length : min, internal[0].length);
+        if(max_internal < min_external) {
+            return []
+        }
+
         let cores = [];
 
-        arr.forEach(a => {
-            if(!cores.some(core => core.length === a.length && core.every(c => a.includes(c)))) {
-                cores.push(a);
+        internal.forEach(int => {
+            if (external.some(ext => ext.length === int.length && ext.every(x => int.includes(x)))) {
+                // int.length === a.length && int.every(c => a.includes(c))
+                // if(int.some()) {
+                cores.push(int);
             }
         });
 

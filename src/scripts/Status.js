@@ -7,6 +7,11 @@ export default class Status {
 
     set = (status) => this.status = status;
 
+    clear = () => {
+        this.status = "";
+        this.field.innerText = "";
+    };
+
     print(status = false) {
         if (status !== false) this.set(status);
         let text = "";

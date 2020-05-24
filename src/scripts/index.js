@@ -72,9 +72,11 @@ $gcanvas.on('mousedown', () => {
 });
 
 [
-    {id: "canvas-clear", func: dots.clear},
-    {id: "canvas-maximal_internal_stability", func: () => status.print(dots.maximal_internal_stability())},
-    {id: "canvas-minimal_external_stability", func: () => status.print(dots.minimal_external_stability())},
+    {id: "canvas-clear", func: () => dots.clear() || status.clear()},
+    {id: "canvas-internal_stability", func: () => status.print(dots.internal_stability())},
+    {id: "canvas-maximal_internal_stability", func: () => status.print(dots.internal_stability(true))},
+    {id: "canvas-external_stability", func: () => status.print(dots.external_stability())},
+    {id: "canvas-minimal_external_stability", func: () => status.print(dots.external_stability(true))},
     {id: "canvas-cores", func: () => status.print(dots.cores())},
 
 ].forEach(({id, func}) => document.getElementById(id).addEventListener('click', func));
