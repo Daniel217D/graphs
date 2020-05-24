@@ -76,7 +76,6 @@ $gcanvas.on('mousedown', () => {
     {id: "canvas-maximal_internal_stability", func: () => status.print(dots.maximal_internal_stability())},
     {id: "canvas-minimal_external_stability", func: () => status.print(dots.minimal_external_stability())},
     {id: "canvas-cores", func: () => status.print(dots.cores())},
-    {id: "canvas-cores__maximal", func: () => status.print(dots.cores(true))}
 
 ].forEach(({id, func}) => document.getElementById(id).addEventListener('click', func));
 
