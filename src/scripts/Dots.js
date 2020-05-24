@@ -216,15 +216,9 @@ export default class Dots {
         const external = this.minimal_external_stability();
         const arr = [...internal, ...external];
         let cores = [];
-        let max = 1;
 
         arr.forEach(a => {
-            if(a.length > max) {
-                cores = [];
-                max = a.length;
-            }
-
-            if(a.length === max ) {
+            if(!cores.some(core => core.length === a.length && core.every(c => a.includes(c)))) {
                 cores.push(a);
             }
         });
