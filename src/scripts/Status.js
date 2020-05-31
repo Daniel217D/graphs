@@ -19,19 +19,22 @@ export default class Status {
         if (status.length === 0) {
             text = "Пустое множество";
         } else if (Array.isArray(status)) {
-            status.forEach(sub => {
-                let li = "";
-                let data = "";
+            status
+                .map(sub => sub.sort((a,b) => a - b))
+                .sort((a,b) => a.length - b.length || a[0] - b[0])
+                .map(sub => {
+                    let li = "";
+                    let data = "";
 
-                sub.forEach(el => {
-                    li += el + ", ";
-                    data += el + ",";
+                    sub.forEach(el => {
+                        li += el + ", ";
+                        data += el + ",";
+                    });
+
+                    li = li.substring(0, li.length - 2);
+                    data = data.substring(0, data.length - 1);
+                    text += "<li data-array='" + data + "'>" + li + ";</li>";
                 });
-
-                li = li.substring(0, li.length - 2);
-                data = data.substring(0, data.length - 1);
-                text += "<li data-array='" + data + "'>" + li + ";</li>";
-            });
             text = "<ul>" + text + "</ul>";
         } else {
             text = status;
