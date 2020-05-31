@@ -224,7 +224,7 @@ export default class Dots {
         const max_internal = internal.reduce((min, arr) => arr.length < min ? arr.length : min, internal[0].length);
         const min_external = internal.reduce((min, arr) => arr.length < min ? arr.length : min, internal[0].length);
         if(max_internal < min_external) {
-            return []
+            return [];
         }
 
         let cores = [];
