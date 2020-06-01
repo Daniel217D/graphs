@@ -84,7 +84,7 @@ $gcanvas.on('mousedown', () => {
 status.field.addEventListener('mouseover', ({target}) => {
     if (target.tagName === "LI") {
         const array = target.getAttribute('data-array').split(',');
-        array.forEach(dotId => dots.getDotById(parseInt(dotId)).color = "blue");
+        array.forEach(dotId => dots.getDotById(parseInt(dotId)).color = "#DD1C1A");
 
         target.addEventListener('mouseleave', () => array.forEach(dotId => dots.getDotById(parseInt(dotId)).color = "black", {once: true}));
     }

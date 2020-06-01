@@ -1,13 +1,10 @@
-$main: rgba(57, 223, 127, 0.8);
-
 .about {
-	position: absolute;
-	top: 10px;
-	right: -10px;
+	min-width: 300px;
+	width: 300px;
 	padding: 0 20px 20px 20px;
-	background-color: $main;
-	border-radius: 5px;
-	pointer-events: none;
+	background: rgb(56,214,250);
+	background: linear-gradient(180deg, rgba(136, 231, 252,1) 0%, rgb(16, 149, 191) 100%);
+	overflow: auto;
 
 	a {
 		pointer-events: auto;
