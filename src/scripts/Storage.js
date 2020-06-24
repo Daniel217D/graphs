@@ -20,12 +20,12 @@ export default class Storage {
         this.update();
     }
 
-    setItem = () => {
+    save = () => {
         this.store.push(this.dots.map(({id, x, y, paths}) => ({id, x, y, paths: paths.map(({id}) => id)})));
         this.update();
     };
 
-    getItem = (id) => {
+    load = (id) => {
         const data = this.store[id];
         if (!data) return false;
 
