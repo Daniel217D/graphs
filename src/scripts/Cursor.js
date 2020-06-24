@@ -3,20 +3,6 @@ export default class Cursor {
         this.x = 0;
         this.y = 0;
 
-        this.mouseDown = {
-            status: false,
-            obj: {}
-        };
-
-        this.drag = {
-            status: false,
-            obj: {}
-        };
-
-        this.click = {
-            status: false,
-            obj: {}
-        };
         const rect = el.getBoundingClientRect();
 
         el.addEventListener('mousemove', (e) => {
