@@ -3,6 +3,7 @@ import '../styles/index.scss';
 import { setEventById } from './helpers';
 import Cursor from './Cursor';
 import Status from "./Status";
+import Storage from "./Storage";
 
 import Dots from './Dots';
 import DotsExamples from './DotsExamples';
@@ -13,6 +14,7 @@ const cursor = new Cursor($gcanvas.get('canvas'));
 const dots = new Dots($gcanvas);
 const status = new Status(document.getElementById("status"));
 (new DotsExamples(dots)).demo1();
+new Storage(dots);
 
 $gcanvas.on('mousedown', () => {
     const dot = dots.getByCoordinates(cursor.x, cursor.y, {r: 0});
