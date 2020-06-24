@@ -1,5 +1,6 @@
 import '../styles/index.scss';
 
+import { setEventById } from './helpers';
 import Cursor from './Cursor';
 import Status from "./Status";
 
@@ -10,10 +11,8 @@ import $cg from './CanvasCMGraphs';
 const $gcanvas = $cg(document.getElementById('canvas')).setSize();
 const cursor = new Cursor($gcanvas.get('canvas'));
 const dots = new Dots($gcanvas);
-const examples = new DotsExamples(dots);
 const status = new Status(document.getElementById("status"));
-
-examples.demo1();
+(new DotsExamples(dots)).demo1();
 
 $gcanvas.on('mousedown', () => {
     const dot = dots.getByCoordinates(cursor.x, cursor.y, {r: 0});
@@ -71,15 +70,15 @@ $gcanvas.on('mousedown', () => {
     e.preventDefault();
 });
 
-[
-    {id: "canvas-clear", func: () => dots.clear() || status.clear()},
-    {id: "canvas-internal_stability", func: () => status.print(dots.internal_stability())},
-    {id: "canvas-maximal_internal_stability", func: () => status.print(dots.internal_stability(true))},
-    {id: "canvas-external_stability", func: () => status.print(dots.external_stability())},
-    {id: "canvas-minimal_external_stability", func: () => status.print(dots.external_stability(true))},
-    {id: "canvas-cores", func: () => status.print(dots.cores())},
+setEventById([
+        {id: "canvas-clear", func: () => {dots.clear(); status.clear()}},
+        {id: "canvas-internal_stability", func: () => status.print(dots.internal_stability())},
+        {id: "canvas-maximal_internal_stability", func: () => status.print(dots.internal_stability(true))},
+        {id: "canvas-external_stability", func: () => status.print(dots.external_stability())},
+        {id: "canvas-minimal_external_stability", func: () => status.print(dots.external_stability(true))},
+        {id: "canvas-cores", func: () => status.print(dots.cores())},
 
-].forEach(({id, func}) => document.getElementById(id).addEventListener('click', func));
+    ]);
 
 status.field.addEventListener('mouseover', ({target}) => {
     if (target.tagName === "LI") {
@@ -90,18 +89,14 @@ status.field.addEventListener('mouseover', ({target}) => {
     }
 });
 
-function Render() {
-    requestAnimationFrame(Render);
+(function render (){
+    requestAnimationFrame(render);
     $gcanvas.clear();
     dots.print();
 
     if (cursor.statusIs("click", "dot")) {
         $gcanvas.gArrow(cursor.getObj("click").x, cursor.getObj("click").y, cursor.x, cursor.y, 0);
     }
-}
+})();
 
-Render();
-window.addEventListener('resize', function () {
-    $gcanvas.setSize();
-    Render();
-});
+window.addEventListener('resize',  () => $gcanvas.setSize());

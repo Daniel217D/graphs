@@ -9,4 +9,11 @@ const direction = (...args) => {
 
 const angleToDirection = (ang) => ({x: Math.cos(ang), y: Math.sin(ang)});
 
-export {distance, direction, angle, angleToDirection};
+const setEventById = (events) => {
+    if(!Array.isArray(events)) {
+        events = [events];
+    }
+
+    events.forEach(({id, func}) => document.getElementById(id).addEventListener('click', func));
+};
+export {distance, direction, angle, angleToDirection, setEventById};

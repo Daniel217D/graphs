@@ -4,7 +4,8 @@
 	padding: 0 20px 20px 20px;
 	background: rgb(56,214,250);
 	background: linear-gradient(180deg, rgba(136, 231, 252,1) 0%, rgb(16, 149, 191) 100%);
-	overflow: auto;
+	overflow-y: scroll;
+	overflow-x: auto;
 
 	a {
 		pointer-events: auto;
