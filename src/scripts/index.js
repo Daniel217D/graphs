@@ -85,25 +85,28 @@ setEventById([
         id: "canvas-saves", func: async ({target}) => {
             if (target.tagName === "BUTTON") {
                 const id = target.getAttribute('data-save');
-
-                if(!storage.canLoad(id)) {
-                    storage.save(id);
-                    return true;
-                }
-
-                const answer = await asking.ask([
-                    {value: 'rewrite', text: 'Перезаписать'},
-                    {value: 'load', text: 'Загрузить'},
-                    {value: 'delete', text: 'Удалить'},
-                    {value: 'close', text: 'Закрыть'}
-                ]);
-
                 const actions = {
+                    'save': () => {storage.save(id);},
                     'rewrite': () => {storage.save(id);},
                     'load': () => {storage.load(id);},
                     'delete': () => {storage.delete(id);},
                     'close': () => {/*do nothing*/}
                 };
+                let answer;
+
+                if(!storage.canLoad(id)) {
+                    answer = await asking.ask([
+                        {value: 'save', text: 'Сохранить'},
+                        {value: 'close', text: 'Закрыть'}
+                    ]);
+                } else {
+                    answer = await asking.ask([
+                        {value: 'rewrite', text: 'Перезаписать'},
+                        {value: 'load', text: 'Загрузить'},
+                        {value: 'delete', text: 'Удалить'},
+                        {value: 'close', text: 'Закрыть'}
+                    ]);
+                }
 
                 actions[answer]();
             }
