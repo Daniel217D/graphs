@@ -4,6 +4,7 @@ import { setEventById } from './helpers';
 import Cursor from './Cursor';
 import Status from "./Status";
 import Storage from "./Storage";
+import Ask from "./AskPopUp";
 
 import Dots from './Dots';
 import DotsExamples from './DotsExamples';
@@ -14,7 +15,8 @@ const cursor = new Cursor($gcanvas.get('canvas'));
 const dots = new Dots($gcanvas);
 const status = new Status(document.getElementById("status"));
 (new DotsExamples(dots)).demo1();
-new Storage(dots);
+const storage = new Storage(dots);
+const asking = new Ask();
 
 $gcanvas.on('mousedown', () => {
     const dot = dots.getByCoordinates(cursor.x, cursor.y, {r: 0});
@@ -73,14 +75,52 @@ $gcanvas.on('mousedown', () => {
 });
 
 setEventById([
-        {id: "canvas-clear", func: () => {dots.clear(); status.clear()}},
-        {id: "canvas-internal_stability", func: () => status.print(dots.internal_stability())},
-        {id: "canvas-maximal_internal_stability", func: () => status.print(dots.internal_stability(true))},
-        {id: "canvas-external_stability", func: () => status.print(dots.external_stability())},
-        {id: "canvas-minimal_external_stability", func: () => status.print(dots.external_stability(true))},
-        {id: "canvas-cores", func: () => status.print(dots.cores())},
+    {
+        id: "canvas-storage", func: (() => {
+            const el = document.getElementById('canvas-saves');
+            return () => el.classList.toggle('hidden');
+        })()
+    },
+    {
+        id: "canvas-saves", func: async ({target}) => {
+            if (target.tagName === "BUTTON") {
+                const id = target.getAttribute('data-save');
 
-    ]);
+                if(!storage.canLoad(id)) {
+                    storage.save(id);
+                    return true;
+                }
+
+                const answer = await asking.ask([
+                    {value: 'rewrite', text: 'Перезаписать'},
+                    {value: 'load', text: 'Загрузить'},
+                    {value: 'delete', text: 'Удалить'},
+                    {value: 'close', text: 'Закрыть'}
+                ]);
+
+                const actions = {
+                    'rewrite': () => {storage.save(id);},
+                    'load': () => {storage.load(id);},
+                    'delete': () => {storage.delete(id);},
+                    'close': () => {/*do nothing*/}
+                };
+
+                actions[answer]();
+            }
+        }
+    },
+    {
+        id: "canvas-clear", func: () => {
+            dots.clear();
+            status.clear();
+        }
+    },
+    {id: "canvas-internal_stability", func: () => status.print(dots.internal_stability())},
+    {id: "canvas-maximal_internal_stability", func: () => status.print(dots.internal_stability(true))},
+    {id: "canvas-external_stability", func: () => status.print(dots.external_stability())},
+    {id: "canvas-minimal_external_stability", func: () => status.print(dots.external_stability(true))},
+    {id: "canvas-cores", func: () => status.print(dots.cores())},
+]);
 
 status.field.addEventListener('mouseover', ({target}) => {
     if (target.tagName === "LI") {

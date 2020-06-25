@@ -17,6 +17,19 @@
     </ul>
 
     <ul class="about-list about-list_buttons">
+      <li class="about-item"><button class="button" id="canvas-storage">Сохранение/Загрузка</button></li>
+      <li class="about-item hidden" id="canvas-saves">
+        <div class="about-saves">
+          <button class="about-save" data-save="0">1</button>
+          <button class="about-save" data-save="1">2</button>
+          <button class="about-save" data-save="2">3</button>
+          <button class="about-save" data-save="3">4</button>
+          <button class="about-save" data-save="4">5</button>
+          <button class="about-save" data-save="5">6</button>
+          <button class="about-save" data-save="6">7</button>
+          <button class="about-save" data-save="7">8</button>
+        </div>
+      </li>
       <li class="about-item"><button class="button" id="canvas-clear">Очистить</button></li>
       <li class="about-item"><button class="button" id="canvas-internal_stability">Внутренне устойчивые</button></li>
       <li class="about-item"><button class="button" id="canvas-maximal_internal_stability">Макc. внутренне устойчивые</button></li>
@@ -28,9 +41,20 @@
     <div class="about-status" id="status">
 
     </div>
-<!--    <a href="https://telegram.im/@dev_ary" target="_blank" class="telegramim_button telegramim_shadow" style="font-size:15px;width:171px;background:#27A5E7;box-shadow:1px 1px 5px #27A5E7;color:#FFFFFF;border-radius:100px;" title=""><i></i> @dev_ary</a>-->
   </div>
+
   <canvas id="canvas"></canvas>
-<!--  <script  type="text/javascript" src="//telegram.im/widget-button/index.php?id=@dev_ary"></script>-->
+
+  <div class="ask hidden" id="askPopUp">
+    <div class="ask-container">
+      <h3 class="ask-title">Выберите действие</h3>
+      <div class="ask-buttons js-askPopUp-container">
+        <button class="ask-button">Ответочка</button>
+        <button class="ask-button">Ответочка</button>
+        <button class="ask-button">Ответочка</button>
+        <button class="ask-button">Ответочка</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

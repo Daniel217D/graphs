@@ -20,8 +20,8 @@ export default class Storage {
         this.update();
     }
 
-    save = () => {
-        this.store.push(this.dots.map(({id, x, y, paths}) => ({id, x, y, paths: paths.map(({id}) => id)})));
+    save = (id) => {
+        this.store[id] = this.dots.dots.map(({id, x, y, paths}) => ({id, x, y, paths: paths.map(({id}) => id)}));
         this.update();
     };
 
@@ -31,13 +31,21 @@ export default class Storage {
 
         this.dots.clear();
         data.forEach(({x,y}) => this.dots.add(x,y));
-        data.forEach(({id, paths}) => paths.forEach(path => this.dots.addPath(id, path)))
+        data.forEach(({id, paths}) => paths.forEach(path => this.dots.addPath(id, path)));
 
-        return true
+        return true;
+    };
+
+    canLoad = (id) => {
+        return !!this.store[id];
     };
 
     update = () => {
         window.localStorage.setItem(STORE_NAME, JSON.stringify(this.store));
+    };
+
+    delete = (id) => {
+        delete this.store[id];
     };
 
     clear = () => {
