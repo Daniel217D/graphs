@@ -8,6 +8,24 @@ export default class Dots {
 
     dots = [];
 
+    count = () => {return this.dots.length};
+
+    pathsCount = () => {
+        let count = this.dots.reduce((acc, cur) => {
+            return acc + cur.paths.length;
+        }, 0)
+
+        this.dots.forEach(dot => {
+            dot.paths.forEach(d => {
+                if(d.paths.find(p => p.paths[dot.id] !== undefined)) {
+                    count--;
+                }
+            })
+        });
+
+        return count
+    };
+
     getIndexById = (id) => {
         return this.dots.findIndex(dot => dot.id === id);
     };

@@ -93,7 +93,76 @@ setEventById([
                     'save': () => {storage.save(id);},
                     'rewrite': () => {storage.save(id);},
                     'file_save': () => {
+                        const data = new DataView(new ArrayBuffer(12 + dots.count() * 20 + dots.pathsCount() * 12));
 
+                        data.setInt8(0, 71);
+                        data.setInt8(1, 82);
+                        data.setInt8(2, 68);
+                        data.setInt8(3, 1);
+                        data.setUint32(4, dots.count(), true);
+
+                        let offset = 8;
+
+                        for (let i = 0; i < dots.count(); i++) {
+                            data.setUint32(offset + 20 * i, dots.dots[i].id - 1, true);
+                            data.setFloat64(offset + 4 + 20 * i, dots.dots[i].x, true);
+                            data.setFloat64(offset + 12 + 20 * i, dots.dots[i].y,true);
+                        }
+
+                        offset += 20 * dots.count();
+
+                        data.setUint32(offset, dots.pathsCount(), true);
+
+                        offset += 4;
+
+                        const paths = [];
+
+                        dots.dots.forEach(dot => {
+                            paths[dot.id - 1] = dot.paths.map(d => {
+                                if(paths[d.id - 1] === undefined) {
+                                    return [d.id - 1, 2];
+                                } else {
+                                    const find = paths[d.id - 1].find(el => el !== undefined && el[0] === dot.id - 1);
+                                    if(find!== undefined) {
+                                        find[1] = 3
+                                    } else {
+                                        return [d.id - 1, 2]
+                                    }
+                                }
+                            })
+                        });
+                        let i = 0;
+                        paths.forEach((ps, psid) => {
+                            ps.forEach(p => {
+                                if(p !== undefined) {
+                                    data.setUint32(offset + 12 * i, psid, true);
+                                    data.setUint32(offset + 4 + 12 * i, p[0], true);
+                                    data.setUint32(offset + 8 + 12 * i,p[1], true);
+                                    i++;
+                                }
+                            })
+                        });
+                        console.log(data.buffer);
+
+                        function download(data, filename, type) {
+                            const file = new Blob([data], {type: type});
+                            if (window.navigator.msSaveOrOpenBlob) // IE10+
+                                window.navigator.msSaveOrOpenBlob(file, filename);
+                            else { // Others
+                                const a = document.createElement("a"),
+                                    url = URL.createObjectURL(file);
+                                a.href = url;
+                                a.download = filename;
+                                document.body.appendChild(a);
+                                a.click();
+                                setTimeout(function() {
+                                    document.body.removeChild(a);
+                                    window.URL.revokeObjectURL(url);
+                                }, 0);
+                            }
+                        }
+
+                        download(data.buffer, 'graph.grd', 'binary')
                     },
                     'load': () => {storage.load(id);},
                     'file_load' : () => {
@@ -103,6 +172,7 @@ setEventById([
                             const reader = new FileReader();
                             reader.onload = function () {
                                 const data = new DataView((new Uint8Array(this.result)).buffer);
+
                                 if (data.getUint8(0) !== 71 || data.getUint8(1) !== 82 || data.getUint8(2) !== 68) {
                                     alert("Неверный формат файла");
                                     return false;
@@ -148,7 +218,7 @@ setEventById([
                                         dots.addPath(firstId, secondId)
                                     }
                                 });
-                                
+
                                 storage.save(id);
                             };
                             reader.readAsArrayBuffer(file);
