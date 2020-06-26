@@ -18,7 +18,10 @@ const status = new Status(document.getElementById("status"));
 const storage = new Storage(dots);
 const asking = new Ask();
 
-$gcanvas.on('mousedown', () => {
+$gcanvas.on('mousedown', (e) => {
+    if(e.button !== 0) { //only left click
+        return
+    }
     const dot = dots.getByCoordinates(cursor.x, cursor.y, {r: 0});
     if (dot) {
         cursor.set("mousedown", "dot", dot);
