@@ -12,34 +12,42 @@ export default class Status {
         this.field.innerText = "";
     };
 
-    print(status = false) {
+    print({title = false, data: status = false}) {
+        console.log(status);
         if (status !== false) this.set(status);
         let text = "";
 
-        if (status.length === 0) {
-            text = "Пустое множество";
-        } else if (Array.isArray(status)) {
-            status
-                .map(sub => sub.sort((a,b) => a - b))
-                .sort((a,b) => a.length - b.length || a[0] - b[0])
-                .map(sub => {
-                    let li = "";
-                    let data = "";
 
-                    sub.forEach(el => {
-                        li += el + ", ";
-                        data += el + ",";
+        if (Array.isArray(status)) {
+            if (status.length === 0) {
+                text = "Пустое множество";
+            } else {
+                status
+                    .map(sub => sub.sort((a,b) => a - b))
+                    .sort((a,b) => a.length - b.length || a[0] - b[0])
+                    .filter(sub => sub.length > 0)
+                    .map(sub => {
+                        let li = "";
+                        let data = "";
+
+                        sub.forEach(el => {
+                            li += el + ", ";
+                            data += el + ",";
+                        });
+
+                        li = li.substring(0, li.length - 2);
+                        data = data.substring(0, data.length - 1);
+                        text += "<li data-array='" + data + "'>" + li + ";</li>";
                     });
-
-                    li = li.substring(0, li.length - 2);
-                    data = data.substring(0, data.length - 1);
-                    text += "<li data-array='" + data + "'>" + li + ";</li>";
-                });
-            text = "<ul>" + text + "</ul>";
+                text = "<ul>" + text + "</ul>";
+            }
         } else {
             text = status;
         }
 
+        if(title) {
+            text = "<h4>" + title + "</h4>" + text;
+        }
         this.field.innerHTML = text;
     }
 }

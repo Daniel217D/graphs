@@ -119,11 +119,11 @@ setEventById([
             status.clear();
         }
     },
-    {id: "canvas-internal_stability", func: () => status.print(dots.internal_stability())},
-    {id: "canvas-maximal_internal_stability", func: () => status.print(dots.internal_stability(true))},
-    {id: "canvas-external_stability", func: () => status.print(dots.external_stability())},
-    {id: "canvas-minimal_external_stability", func: () => status.print(dots.external_stability(true))},
-    {id: "canvas-cores", func: () => status.print(dots.cores())},
+    {id: "canvas-internal_stability", func: () => status.print({title: 'Внутренне устойчивые', data: dots.internal_stability()})},
+    {id: "canvas-maximal_internal_stability", func: () => status.print({title: 'Макc. внутренне устойчивые', data: dots.internal_stability(true)})},
+    {id: "canvas-external_stability", func: () => status.print({title: 'Внешне устойчивые', data: dots.external_stability()})},
+    {id: "canvas-minimal_external_stability", func: () => status.print({title: 'Мин. внешне устойчивые', data: dots.external_stability(true)})},
+    {id: "canvas-cores", func: () => status.print({title: 'Ядра', data: dots.cores()})},
 ]);
 
 status.field.addEventListener('mouseover', ({target}) => {
