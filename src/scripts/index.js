@@ -68,8 +68,9 @@ $gcanvas.on('mousedown', () => {
         }
     }
 }).on('contextmenu', (e) => {
-    if (cursor.statusIs("click", "dot")) {
-        cursor.set("click", false);
+    const dot = dots.getByCoordinates(cursor.x, cursor.y, {r: 0});
+    if(dot) {
+        dots.remove(dot.id)
     }
     e.preventDefault();
 });
