@@ -29,7 +29,7 @@ export default class Dots {
 
     addDots = (arr) => arr.forEach(args => this.add(...args));
 
-    addPath = (d1, d2) => {
+    addPath = (d1, d2, isBidirectional = false) => {
         if (Number.isInteger(d1)) {
             d1 = this.getDotById(d1);
         }
@@ -47,6 +47,10 @@ export default class Dots {
         }
 
         d1.addPath(d2);
+        
+        if(isBidirectional) {
+            d2.addPath(d1);
+        }
     };
 
     addPaths = (arr) => arr.forEach(args => this.addPath(...args));
@@ -221,6 +225,10 @@ export default class Dots {
     cores = () => {
         const internal = this.internal_stability();
         const external = this.external_stability();
+
+        if(internal.length === 0 || external.length === 0) {
+            return [];
+        }
 
         const max_internal = internal.reduce((min, arr) => arr.length < min ? arr.length : min, internal[0].length);
         const min_external = internal.reduce((min, arr) => arr.length < min ? arr.length : min, internal[0].length);
