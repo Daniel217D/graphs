@@ -53,6 +53,7 @@ export default class Dots {
 
     remove = (id) => {
         this.dots.splice(this.getIndexById(id), 1);
+        this.dots.forEach(({paths}) => paths.forEach((path, i) => path.id === id ? delete paths[i] : ''))
     };
 
     clear = () => this.dots = [];
