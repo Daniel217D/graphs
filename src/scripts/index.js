@@ -92,7 +92,69 @@ setEventById([
                 const actions = {
                     'save': () => {storage.save(id);},
                     'rewrite': () => {storage.save(id);},
+                    'file_save': () => {
+
+                    },
                     'load': () => {storage.load(id);},
+                    'file_load' : () => {
+                        const input = document.getElementById('fileLoader');
+                        input.addEventListener("change", function () {
+                            const file = this.files[0];
+                            const reader = new FileReader();
+                            reader.readAsArrayBuffer(file);
+                            reader.onload = function () {
+                                const buffer = (new Uint8Array(this.result)).buffer;
+                                console.log(buffer);
+                                const data = new DataView(buffer);
+                                if (data.getUint8(0) !== 71 || data.getUint8(1) !== 82 || data.getUint8(2) !== 68) {
+                                    alert("Неверный формат файла");
+                                    return false;
+                                }
+                                let offset;
+
+                                const dotsCount = data.getUint32(4, true);
+
+                                offset = 8 + dotsCount * 20;
+                                const pathsCount = data.getUint32(offset, true);
+
+                                const readDots = [];
+                                const readPaths = [];
+
+                                offset = 8;
+                                for (let i = 0; i < dotsCount; i++) {
+                                    readDots.push({
+                                        id: data.getUint32(offset + 20 * i, true) + 1,
+                                        x: data.getFloat64(offset + 4 + 20 * i, true),
+                                        y: data.getFloat64(offset + 12 + 20 * i, true)
+                                    });
+                                }
+
+                                offset = 8 + 20 * dotsCount + 4;
+
+                                for (let i = 0; i < pathsCount; i++) {
+                                    readPaths.push({
+                                        firstId: data.getUint32(offset + 12 * i, true) + 1,
+                                        secondId: data.getUint32(offset + 4 + 12 * i, true) + 1,
+                                        dir: data.getUint32(offset + 8 + 12 * i, true)
+                                    });
+                                }
+
+                                dots.clear();
+                                readDots.forEach(({x,y}) => dots.add(x,y));
+                                readPaths.forEach(({firstId, secondId, dir}) => {
+                                    if(dir === 0) {
+                                        dots.addPath(secondId, firstId)
+                                    } else if(dir === 1) {
+                                        dots.addPath(firstId, secondId)
+                                    } else {
+                                        dots.addPath(secondId, firstId);
+                                        dots.addPath(firstId, secondId)
+                                    }
+                                });
+                            };
+                        }, {once: true});
+                        input.click();
+                    },
                     'delete': () => {storage.delete(id);},
                     'close': () => {/*do nothing*/}
                 };
@@ -101,11 +163,14 @@ setEventById([
                 if(!storage.canLoad(id)) {
                     answer = await asking.ask([
                         {value: 'save', text: 'Сохранить'},
+                        {value: 'file_load', text: 'Загрузить из файла и сохранить'},
                         {value: 'close', text: 'Закрыть'}
                     ]);
                 } else {
                     answer = await asking.ask([
                         {value: 'rewrite', text: 'Перезаписать'},
+                        {value: 'file_load', text: 'Загрузить из файла и перезаписать'},
+                        {value: 'file_save', text: 'Сохранить в файл'},
                         {value: 'load', text: 'Загрузить'},
                         {value: 'delete', text: 'Удалить'},
                         {value: 'close', text: 'Закрыть'}
