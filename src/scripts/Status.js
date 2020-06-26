@@ -13,7 +13,6 @@ export default class Status {
     };
 
     print({title = false, data: status = false}) {
-        console.log(status);
         if (status !== false) this.set(status);
         let text = "";
 
