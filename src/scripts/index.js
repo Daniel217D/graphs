@@ -101,11 +101,8 @@ setEventById([
                         input.addEventListener("change", function () {
                             const file = this.files[0];
                             const reader = new FileReader();
-                            reader.readAsArrayBuffer(file);
                             reader.onload = function () {
-                                const buffer = (new Uint8Array(this.result)).buffer;
-                                console.log(buffer);
-                                const data = new DataView(buffer);
+                                const data = new DataView((new Uint8Array(this.result)).buffer);
                                 if (data.getUint8(0) !== 71 || data.getUint8(1) !== 82 || data.getUint8(2) !== 68) {
                                     alert("Неверный формат файла");
                                     return false;
@@ -151,7 +148,10 @@ setEventById([
                                         dots.addPath(firstId, secondId)
                                     }
                                 });
+                                
+                                storage.save(id);
                             };
+                            reader.readAsArrayBuffer(file);
                         }, {once: true});
                         input.click();
                     },
@@ -169,10 +169,10 @@ setEventById([
                 } else {
                     answer = await asking.ask([
                         {value: 'rewrite', text: 'Перезаписать'},
-                        {value: 'file_load', text: 'Загрузить из файла и перезаписать'},
-                        {value: 'file_save', text: 'Сохранить в файл'},
                         {value: 'load', text: 'Загрузить'},
                         {value: 'delete', text: 'Удалить'},
+                        {value: 'file_load', text: 'Загрузить из файла и перезаписать'},
+                        {value: 'file_save', text: 'Сохранить в файл'},
                         {value: 'close', text: 'Закрыть'}
                     ]);
                 }
