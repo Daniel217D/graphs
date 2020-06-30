@@ -20,7 +20,7 @@ const asking = new Ask();
 
 $gcanvas.on('mousedown', (e) => {
     if(e.button !== 0) { //only left click
-        return
+        return;
     }
     const dot = dots.getByCoordinates(cursor.x, cursor.y, {r: 0});
     if (dot) {
@@ -73,7 +73,7 @@ $gcanvas.on('mousedown', (e) => {
 }).on('contextmenu', (e) => {
     const dot = dots.getByCoordinates(cursor.x, cursor.y, {r: 0});
     if(dot) {
-        dots.remove(dot.id)
+        dots.remove(dot.id);
     }
     e.preventDefault();
 });
@@ -90,8 +90,8 @@ setEventById([
             if (target.tagName === "BUTTON") {
                 const id = target.getAttribute('data-save');
                 const actions = {
-                    'save': () => {storage.save(id); alert('Граф сохранен в браузере')},
-                    'rewrite': () => {storage.save(id); alert('Сохранение пересаписано')},
+                    'save': () => {storage.save(id); alert('Граф сохранен в браузере');},
+                    'rewrite': () => {storage.save(id); alert('Сохранение пересаписано');},
                     'file_save': () => {
                         const data = new DataView(new ArrayBuffer(12 + dots.count() * 20 + dots.pathsCount() * 12));
 
@@ -124,12 +124,12 @@ setEventById([
                                 } else {
                                     const find = paths[d.id - 1].find(el => el !== undefined && el[0] === dot.id - 1);
                                     if(find!== undefined) {
-                                        find[1] = 3
+                                        find[1] = 3;
                                     } else {
-                                        return [d.id - 1, 2]
+                                        return [d.id - 1, 2];
                                     }
                                 }
-                            })
+                            });
                         });
                         let i = 0;
                         paths.forEach((ps, psid) => {
@@ -140,7 +140,7 @@ setEventById([
                                     data.setUint32(offset + 8 + 12 * i,p[1], true);
                                     i++;
                                 }
-                            })
+                            });
                         });
                         console.log(data.buffer);
 
@@ -162,10 +162,10 @@ setEventById([
                             }
                         }
 
-                        download(data.buffer, `graph-${(new Date).getMonth() + 1}-${(new Date).getDate()}-${(new Date).getHours()}-${(new Date).getMinutes()}-${(new Date).getSeconds()}.grd`, 'binary')
-                        alert('Граф сохранен в файл')
+                        download(data.buffer, `graph-${(new Date).getMonth() + 1}-${(new Date).getDate()}-${(new Date).getHours()}-${(new Date).getMinutes()}-${(new Date).getSeconds()}.grd`, 'binary');
+                        alert('Граф сохранен в файл');
                     },
-                    'load': () => {storage.load(id); alert('Граф загружен из браузера')},
+                    'load': () => {storage.load(id); alert('Граф загружен из браузера');},
                     'file_load' : () => {
                         const input = document.getElementById('fileLoader');
                         input.addEventListener("change", function () {
@@ -211,23 +211,23 @@ setEventById([
                                 readDots.forEach(({x,y}) => dots.add(x,y));
                                 readPaths.forEach(({firstId, secondId, dir}) => {
                                     if(dir === 0) {
-                                        dots.addPath(secondId, firstId)
+                                        dots.addPath(secondId, firstId);
                                     } else if(dir === 1) {
-                                        dots.addPath(firstId, secondId)
+                                        dots.addPath(firstId, secondId);
                                     } else {
                                         dots.addPath(secondId, firstId);
-                                        dots.addPath(firstId, secondId)
+                                        dots.addPath(firstId, secondId);
                                     }
                                 });
 
                                 storage.save(id);
-                                alert('Граф загружен из файла')
+                                alert('Граф загружен из файла');
                             };
                             reader.readAsArrayBuffer(file);
                         }, {once: true});
                         input.click();
                     },
-                    'delete': () => {storage.delete(id); alert('Сохранение удалено из браузера')},
+                    'delete': () => {storage.delete(id); alert('Сохранение удалено из браузера');},
                     'close': () => {/*do nothing*/}
                 };
                 let answer;

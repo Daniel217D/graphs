@@ -8,22 +8,22 @@ export default class Dots {
 
     dots = [];
 
-    count = () => {return this.dots.length};
+    count = () => {return this.dots.length;};
 
     pathsCount = () => {
         let count = this.dots.reduce((acc, cur) => {
             return acc + cur.paths.length;
-        }, 0)
+        }, 0);
 
         this.dots.forEach(dot => {
             dot.paths.forEach(d => {
                 if(d.paths.find(p => p.paths[dot.id] !== undefined)) {
                     count--;
                 }
-            })
+            });
         });
 
-        return count
+        return count;
     };
 
     getIndexById = (id) => {
@@ -75,7 +75,7 @@ export default class Dots {
 
     remove = (id) => {
         this.dots.splice(this.getIndexById(id), 1);
-        this.dots.forEach(({paths}) => paths.forEach((path, i) => path.id === id ? delete paths[i] : ''))
+        this.dots.forEach(({paths}) => paths.forEach((path, i) => path.id === id ? delete paths[i] : ''));
     };
 
     clear = () => this.dots = [];
