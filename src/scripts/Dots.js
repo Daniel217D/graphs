@@ -81,8 +81,10 @@ export default class Dots {
     clear = () => this.dots = [];
 
     print = () => {
-        this.dots.forEach(dot => dot.printPaths(this.$gcanvas));
-        this.dots.forEach(dot => dot.printDot(this.$gcanvas));
+        if(this.$gcanvas) {
+            this.dots.forEach(dot => dot.printPaths(this.$gcanvas));
+            this.dots.forEach(dot => dot.printDot(this.$gcanvas));
+        }
     };
 
     internal_stability = (maximal = false) => {
