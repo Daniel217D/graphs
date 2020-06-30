@@ -93,6 +93,8 @@ setEventById([
                     'save': () => {storage.save(id); alert('Граф сохранен в браузере');},
                     'rewrite': () => {storage.save(id); alert('Сохранение пересаписано');},
                     'file_save': () => {
+                        const dots = new Dots;
+                        (new Storage(dots)).load(id);
                         const data = new DataView(new ArrayBuffer(12 + dots.count() * 20 + dots.pathsCount() * 12));
 
                         data.setInt8(0, 71);
@@ -120,13 +122,13 @@ setEventById([
                         dots.dots.forEach(dot => {
                             paths[dot.id - 1] = dot.paths.map(d => {
                                 if(paths[d.id - 1] === undefined) {
-                                    return [d.id - 1, 2];
+                                    return [d.id - 1, 1];
                                 } else {
                                     const find = paths[d.id - 1].find(el => el !== undefined && el[0] === dot.id - 1);
                                     if(find!== undefined) {
-                                        find[1] = 3;
+                                        find[1] = 2;
                                     } else {
-                                        return [d.id - 1, 2];
+                                        return [d.id - 1, 1];
                                     }
                                 }
                             });
@@ -220,7 +222,7 @@ setEventById([
                                     }
                                 });
 
-                                storage.save(id);
+                                storage.save(id); 
                                 alert('Граф загружен из файла');
                             };
                             reader.readAsArrayBuffer(file);
