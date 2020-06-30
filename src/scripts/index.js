@@ -90,8 +90,8 @@ setEventById([
             if (target.tagName === "BUTTON") {
                 const id = target.getAttribute('data-save');
                 const actions = {
-                    'save': () => {storage.save(id);},
-                    'rewrite': () => {storage.save(id);},
+                    'save': () => {storage.save(id); alert('Граф сохранен в браузере')},
+                    'rewrite': () => {storage.save(id); alert('Сохранение пересаписано')},
                     'file_save': () => {
                         const data = new DataView(new ArrayBuffer(12 + dots.count() * 20 + dots.pathsCount() * 12));
 
@@ -162,9 +162,10 @@ setEventById([
                             }
                         }
 
-                        download(data.buffer, 'graph.grd', 'binary')
+                        download(data.buffer, `graph-${(new Date).getMonth() + 1}-${(new Date).getDate()}-${(new Date).getHours()}-${(new Date).getMinutes()}-${(new Date).getSeconds()}.grd`, 'binary')
+                        alert('Граф сохранен в файл')
                     },
-                    'load': () => {storage.load(id);},
+                    'load': () => {storage.load(id); alert('Граф загружен из браузера')},
                     'file_load' : () => {
                         const input = document.getElementById('fileLoader');
                         input.addEventListener("change", function () {
@@ -220,12 +221,13 @@ setEventById([
                                 });
 
                                 storage.save(id);
+                                alert('Граф загружен из файла')
                             };
                             reader.readAsArrayBuffer(file);
                         }, {once: true});
                         input.click();
                     },
-                    'delete': () => {storage.delete(id);},
+                    'delete': () => {storage.delete(id); alert('Сохранение удалено из браузера')},
                     'close': () => {/*do nothing*/}
                 };
                 let answer;
