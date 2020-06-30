@@ -158,12 +158,12 @@ setEventById([
                                 setTimeout(function() {
                                     document.body.removeChild(a);
                                     window.URL.revokeObjectURL(url);
+                                    alert('Граф сохранен в файл ' + filename);
                                 }, 0);
                             }
                         }
 
                         download(data.buffer, `graph-${(new Date).getMonth() + 1}-${(new Date).getDate()}-${(new Date).getHours()}-${(new Date).getMinutes()}-${(new Date).getSeconds()}.grd`, 'binary');
-                        alert('Граф сохранен в файл');
                     },
                     'load': () => {storage.load(id); alert('Граф загружен из браузера');},
                     'file_load' : () => {
